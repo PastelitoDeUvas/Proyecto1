@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,7 +38,26 @@ ax.scatter(data_3d["x"], data_3d["y"], data_3d["z"], s=50)
 ax.set_title("Datos 3D")
 plt.show()
 
-################
+# Normalización de los datos
+scaler = StandardScaler()
+data_2d = scaler.fit_transform(data_2d)
+data_3d = scaler.fit_transform(data_3d)
+
+# Funciones para K-Means con distintas métricas de distancia
+def euclidean_distance(A, B):
+    return np.linalg.norm(A - B, axis=1)
+
+def manhattan_distance(A, B):
+    return np.sum(np.abs(A - B), axis=1)
+
+def chebyshev_distance(A, B):
+    return np.max(np.abs(A - B), axis=1)
+
+distance_metrics = {
+    "Euclidiana": euclidean_distance,
+    "Manhattan": manhattan_distance,
+    "Chebyshev": chebyshev_distance
+}
 
 def initialize_centroids(X, k):
     np.random.seed(412)
@@ -51,9 +69,9 @@ def initialize_centroids(X, k):
         centroids.append(new_centroid)
     return np.array(centroids)
 
-def assign_clusters(X, centroids):
-    distances = np.array([[np.linalg.norm(x - centroid) for centroid in centroids] for x in X])
-    return np.argmin(distances, axis=1)
+def assign_clusters(X, centroids, metric_func):
+    distances = np.array([metric_func(X, centroid) for centroid in centroids])
+    return np.argmin(distances, axis=0)
 
 def update_centroids(X, labels, k):
     new_centroids = []
@@ -68,54 +86,39 @@ def update_centroids(X, labels, k):
 
 def compute_inertia(X, centroids, labels):
     inertia = 0
-    for i in range(len(centroids)):
+    labels = np.array(labels)
+    for i, centroid in enumerate(centroids):
         cluster_points = X[labels == i]
-        inertia += np.sum(np.linalg.norm(cluster_points - centroids[i], axis=1) ** 2)
+        inertia += np.sum((cluster_points - centroid) ** 2)
     return inertia
 
-def kmeans(X, k, max_iters=100, tol=1e-4):
+def kmeans(X, k, metric_func, max_iters=100, tol=1e-4):
     centroids = initialize_centroids(X, k)
-    print("Centroides iniciales:", centroids)
-    
-    for i in range(max_iters):
-        labels = assign_clusters(X, centroids)
+    for _ in range(max_iters):
+        labels = assign_clusters(X, centroids, metric_func)
         new_centroids = update_centroids(X, labels, k)
-        
         if np.mean(np.linalg.norm(new_centroids - centroids, axis=1)) < tol:
-            print("Convergencia alcanzada.")
             break
-        
         centroids = new_centroids
-    
     inertia = compute_inertia(X, centroids, labels)
-    print(f"Inercia final: {inertia}")
-    print("Centroides finales:", centroids)
     return centroids, labels, inertia
-
-# Cargar y normalizar datos
-data_2d = pd.read_csv("data_2d.csv").values
-data_3d = pd.read_csv("data_3d.csv").values
-scaler = StandardScaler()
-data_2d = scaler.fit_transform(data_2d)
-data_3d = scaler.fit_transform(data_3d)
 
 # Número de clusters
 k = 5
 
-# Aplicar k-means a data_2d
-centroids_2d, labels_2d, inertia_2d = kmeans(data_2d, k)
-plt.scatter(data_2d[:, 0], data_2d[:, 1], c=labels_2d, cmap='viridis', alpha=0.6)
-plt.scatter(centroids_2d[:, 0], centroids_2d[:, 1], c='red', marker='x', s=100)
-plt.title(f"K-Means Clustering - 2D Data\nInercia: {inertia_2d:.2f}")
-plt.show()
+# Aplicar k-means con cada métrica
+for metric_name, metric_func in distance_metrics.items():
+    print(f"Métrica: {metric_name}")
+    centroids_2d, labels_2d, inertia_2d = kmeans(data_2d, k, metric_func)
+    plt.scatter(data_2d[:, 0], data_2d[:, 1], c=labels_2d, cmap='viridis', alpha=0.6)
+    plt.scatter(centroids_2d[:, 0], centroids_2d[:, 1], c='red', marker='x', s=100)
+    plt.title(f"K-Means - 2D ({metric_name})\nInercia: {inertia_2d:.2f}")
+    plt.show()
 
-# Aplicar k-means a data_3d
-centroids_3d, labels_3d, inertia_3d = kmeans(data_3d, k)
-fig = plt.figure(figsize=(8, 6))
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(data_3d[:, 0], data_3d[:, 1], data_3d[:, 2], c=labels_3d, cmap='viridis', alpha=0.6)
-ax.scatter(centroids_3d[:, 0], centroids_3d[:, 1], centroids_3d[:, 2], c='red', marker='x', s=100)
-ax.set_title(f"K-Means Clustering - 3D Data\nInercia: {inertia_3d:.2f}")
-plt.show()
-
-
+    centroids_3d, labels_3d, inertia_3d = kmeans(data_3d, k, metric_func)
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(data_3d[:, 0], data_3d[:, 1], data_3d[:, 2], c=labels_3d, cmap='viridis', alpha=0.6)
+    ax.scatter(centroids_3d[:, 0], centroids_3d[:, 1], centroids_3d[:, 2], c='red', marker='x', s=100)
+    ax.set_title(f"K-Means - 3D ({metric_name})\nInercia: {inertia_3d:.2f}")
+    plt.show()

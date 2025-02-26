@@ -60,7 +60,7 @@ distance_metrics = {
 }
 
 def initialize_centroids(X, k):
-    np.random.seed(412)
+    np.random.seed(41342)
     centroids = [X[np.random.randint(len(X))]]  # Primer centroide aleatorio
     for _ in range(1, k):
         distances = np.array([min([np.linalg.norm(x - c) for c in centroids]) for x in X])

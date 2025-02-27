@@ -175,6 +175,27 @@ ax.set_title(f"K-Means Euclidiano\nInercia: {inertia_3d:.2f}")
 plt.show()
 
 
+"""
+Impacto de la Métrica de Distancia en la Asignación de Clusters con K-Means
+
+Resultados
+Se probó el algoritmo K-Means con distintas métricas de distancia (Euclidiana, Manhattan y Chebyshev) y con diferentes semillas de inicialización. No se observaron cambios significativos en la asignación de clusters ni en la inercia final.
+
+Impacto de la Métrica de Distancia
+El uso de diferentes métricas no afectó la asignación de clusters. Esto puede deberse a que los datos tienen clusters bien definidos y la normalización minimizó diferencias entre distancias.
+
+Impacto de la Semilla de Inicialización
+El cambio de semilla no alteró los resultados, lo que sugiere que el algoritmo es robusto y converge a soluciones similares independientemente de la inicialización.
+
+Análisis de la Calidad del Clustering
+Para  con la distancia euclidiana, se obtuvo una inercia de 304. Esto indica que el agrupamiento es razonablemente bueno, aunque no perfecto. Los clusters muestran cierta estructura, pero también se observa dispersión en los datos. Al cambiar la métrica de distancia, la inercia aumentó un poco, pero no lo suficiente como para hacer una diferencia significativa. Esto sugiere que la elección de la métrica no es un factor determinante en este caso, probablemente porque la distribución de los datos no es esférica y K-Means no siempre es el método más adecuado para este tipo de formas.
+
+En general, el clustering obtenido es aceptable, pero no ideal. Se podría mejorar explorando otros métodos como DBSCAN o GMM, que pueden manejar mejor estructuras de datos más complejas.
+
+Conclusión
+En este experimento, ni la métrica de distancia ni la semilla de inicialización tuvieron un impacto relevante en la formación de los clusters. La inercia sugiere un agrupamiento razonable, pero con margen de mejora. Dado que la distribución de los datos no es esférica, K-Means puede no ser la mejor opción. Sería interesante probar con diferentes valores de  y evaluar la calidad del clustering con métricas adicionales, como el Índice de Silueta, para obtener una mejor perspectiva de los resultados.
+
+"""
 
 
 

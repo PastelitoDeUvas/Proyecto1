@@ -9,8 +9,16 @@ from sklearn.preprocessing import StandardScaler
 def euclidean_distance(A, B):
     return np.linalg.norm(A - B, axis=1)
 
+def manhattan_distance(A, B):
+    return np.sum(np.abs(A - B), axis=1)
+
+def chebyshev_distance(A, B):
+    return np.max(np.abs(A - B), axis=1)
+
 distance_metrics = {
     "Euclidiana": euclidean_distance,
+    "Manhattan": manhattan_distance,
+    "Chebyshev": chebyshev_distance
 }
 
 
@@ -107,12 +115,14 @@ for metric_name, metric_func in distance_metrics.items():
         centroids_2d, labels_2d, inertia_2d = kmeans(mall_data_standardized, k, metric_func)
         print("Número de nubes:", k, "\nInercia:", inertia_2d)
 
-centroids_3d, labels_3d, inertia_3d = kmeans(mall_data_standardized, 3, metric_func)
-fig = plt.figure(figsize=(8, 6))
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(mall_data_standardized[:, 0], mall_data_standardized[:, 1], mall_data_standardized[:, 2], c=labels_3d, cmap='viridis', alpha=0.6)
-ax.scatter(centroids_3d[:, 0], centroids_3d[:, 1], centroids_3d[:, 2], c='red', marker='x', s=100)
-ax.set_title(f"K-Means - 3D ({metric_name})\nInercia: {inertia_3d:.2f}")
-plt.show()
+    centroids_3d, labels_3d, inertia_3d = kmeans(mall_data_standardized, 3, metric_func)
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(mall_data_standardized[:, 0], mall_data_standardized[:, 1], mall_data_standardized[:, 2], c=labels_3d, cmap='viridis', alpha=0.6)
+    ax.scatter(centroids_3d[:, 0], centroids_3d[:, 1], centroids_3d[:, 2], c='red', marker='x', s=100)
+    ax.set_title(f"K-Means - 3D ({metric_name})\nInercia: {inertia_3d:.2f}")
+    plt.show()
+
+
 
 

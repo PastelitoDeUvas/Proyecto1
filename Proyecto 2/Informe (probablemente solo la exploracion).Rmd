@@ -18,8 +18,9 @@ ipak <- function(pkg){
     install.packages(new.pkg, dependencies = TRUE)
   sapply(pkg, require, character.only = TRUE)
 }
-packages <- c("readxl","tidyverse","GGally","dplyr")
+packages <- c("readxl","tidyverse","GGally","dplyr","reticulate")
 ipak(packages)
+
 
 ```
 
@@ -35,10 +36,19 @@ str(data)
 summary(data)
 colSums(is.na(data))
 
+normalize_zscore <- function(x) {
+  return((x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE))
+}
+
+
+
 test <- data %>% sample_n(1000)
 
+test_standardized <- test %>%
+  mutate(across(c(NO2, PM10, SO2, CO, O3, AQI), normalize_zscore))
+
 #distribution analysis 
-test %>%
+test_standardized %>%
   pivot_longer(cols = c(NO2, PM10, SO2, CO, O3, AQI), names_to = "Variable", values_to = "Valor") %>%
   ggplot(aes(x = Valor, fill = Variable)) +
   geom_density(alpha = 0.5) +
@@ -47,20 +57,20 @@ test %>%
 
 #Variable Relation 
 
-ggpairs(test, columns = c("NO2", "PM10", "SO2", "CO", "O3", "AQI"), aes(alpha = 0.5))
-corr_matrix <- cor(test %>% select(NO2, PM10, SO2, CO, O3, AQI))
+ggpairs(test_standardized, columns = c("NO2", "PM10", "SO2", "CO", "O3", "AQI"), aes(alpha = 0.5))
+corr_matrix <- cor(test_standardized %>% select(NO2, PM10, SO2, CO, O3, AQI))
 corrplot::corrplot(corr_matrix, method = "color", type = "lower", tl.col = "black", addCoef.col = "black")
 
 
 
 #identificar atipicos 
-test %>%
+test_standardized %>%
   pivot_longer(cols = c(NO2, PM10, SO2, CO, O3), names_to = "Variable", values_to = "Valor") %>%
   ggplot(aes(x = Variable, y = Valor)) +
   geom_boxplot(fill = "lightblue") +
   theme_minimal()
 
-outliers <- test %>%
+outliers <- test_standardized
   pivot_longer(cols = c(NO2, PM10, SO2, CO, O3, AQI), names_to = "Variable", values_to = "Valor") %>%
   group_by(Variable) %>%
   summarise(
@@ -77,6 +87,10 @@ print(outliers)
 ```
 
 
+```{python}
+import pandas as pd
+
+```
 
 
 

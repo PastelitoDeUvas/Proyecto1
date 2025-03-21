@@ -5,8 +5,85 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
+
+
+
+#Library
 ```{r message=FALSE, warning=FALSE,echo=FALSE}
+# Cargar librerías necesarias
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+packages <- c("readxl","tidyverse","GGally","dplyr")
+ipak(packages)
+
+```
+
+
+#Read Files
+```{r message=FALSE, warning=FALSE,echo=FALSE}
+data <- read.csv('data.csv')
+
+#General inspection (unicamente un formalismo)
+head(data)
+dim(data)
+str(data)
+summary(data)
+colSums(is.na(data))
+
+test <- data %>% sample_n(1000)
+
+#distribution analysis 
+test %>%
+  pivot_longer(cols = c(NO2, PM10, SO2, CO, O3, AQI), names_to = "Variable", values_to = "Valor") %>%
+  ggplot(aes(x = Valor, fill = Variable)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal()
+
+#Variable Relation 
+
+ggpairs(test, columns = c("NO2", "PM10", "SO2", "CO", "O3", "AQI"), aes(alpha = 0.5))
+corr_matrix <- cor(test %>% select(NO2, PM10, SO2, CO, O3, AQI))
+corrplot::corrplot(corr_matrix, method = "color", type = "lower", tl.col = "black", addCoef.col = "black")
+
+
+
+#identificar atipicos 
+test %>%
+  pivot_longer(cols = c(NO2, PM10, SO2, CO, O3), names_to = "Variable", values_to = "Valor") %>%
+  ggplot(aes(x = Variable, y = Valor)) +
+  geom_boxplot(fill = "lightblue") +
+  theme_minimal()
+
+outliers <- test %>%
+  pivot_longer(cols = c(NO2, PM10, SO2, CO, O3, AQI), names_to = "Variable", values_to = "Valor") %>%
+  group_by(Variable) %>%
+  summarise(
+    Q1 = quantile(Valor, 0.25),
+    Q3 = quantile(Valor, 0.75),
+    IQR = Q3 - Q1,
+    Lower_Bound = Q1 - 1.5 * IQR,
+    Upper_Bound = Q3 + 1.5 * IQR,
+    Outliers = sum(Valor < Lower_Bound | Valor > Upper_Bound)
+  )
+print(outliers)
 
 
 ```
+
+
+
+
+
+
+
+
+
+
+
 

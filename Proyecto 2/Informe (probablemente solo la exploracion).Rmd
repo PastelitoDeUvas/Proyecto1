@@ -88,7 +88,8 @@ print(outliers)
 
 
 ```{python}
-import pandas as pd
+import codes
+
 
 ```
 

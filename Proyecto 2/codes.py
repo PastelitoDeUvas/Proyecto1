@@ -1,5 +1,26 @@
 import numpy as np
 
+def split_matrices(matrix1, matrix2, seed=None):
+    if seed is not None:
+        np.random.seed(seed)  # Para reproducibilidad
+    
+    assert matrix1.shape[0] == matrix2.shape[0], "Las matrices deben tener el mismo número de filas."
+    
+    num_rows = matrix1.shape[0]
+    num_selected = int(0.2 * num_rows)
+    
+    indices = np.random.choice(num_rows, num_selected, replace=False)
+    mask = np.ones(num_rows, dtype=bool)
+    mask[indices] = False
+    
+    # Generar las 4 matrices
+    matrix1_20 = matrix1[indices, :]
+    matrix2_20 = matrix2[indices, :]
+    matrix1_80 = matrix1[mask, :]
+    matrix2_80 = matrix2[mask, :]
+    
+    return matrix1_20, matrix2_20, matrix1_80, matrix2_80
+
 def create_variable_matrix(matriz, grado=1):
 
     m, n = matriz.shape

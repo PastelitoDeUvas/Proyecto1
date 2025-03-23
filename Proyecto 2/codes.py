@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def split_matrices(matrix1, matrix2, seed=None):
     if seed is not None:
@@ -97,5 +98,53 @@ def gradiente_descendente_data (A,b):
     
     print(f"Error: {error_gd:.2f}")
     print(f"Número de iteraciones: {iteraciones}")
+    
 
 
+def encontrar_minimo(lista_de_listas):
+    min_valor = float('inf')  
+    for i, fila in enumerate(lista_de_listas):
+        for j, valor in enumerate(fila):
+            if valor < min_valor:
+                min_valor = valor
+                posicion_i = i
+                posicion_j = j
+    
+    return min_valor, posicion_i,posicion_j
+
+def model_training (a,b):
+    all_errores = []  # Lista para los errores
+    all_betas = []
+    for k in range (1,10):
+        errores = []  # Lista para los errores
+        grados = []   # Lista de grados
+        betas_list = []
+        a_20,b_20,a_80,b_80=split_matrices(a,b, seed=k**2)
+        for i in range (1,10):  
+            a=create_variable_matrix(a_20, grado=i)
+            beta=pseudoinversa(a,b_20)
+            betas_list.append(beta)
+            a=create_variable_matrix(a_80,grado=i)
+            error=error(a,b_80,beta)
+            errores.append(error)
+            grados.append(i)
+        all_errores.append(errores)
+        all_betas.append(betas_list)
+        plt.figure(figsize=(8, 5))
+        plt.plot(grados, errores, marker='o', linestyle='-', color='b', label='Error')
+        plt.xlabel('Grado del Modelo')
+        plt.ylabel('Error')
+        plt.title('Error vs. Grado del Modelo')
+        plt.legend()
+        plt.grid()
+        plt.show()
+    best_error,i,j=encontrar_minimo(all_errores)
+    best_beta=all_betas[i,j]
+    return best_error,best_beta
+    
+        
+        
+        
+    
+    
+    

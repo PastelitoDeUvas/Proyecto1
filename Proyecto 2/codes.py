@@ -10,10 +10,6 @@ def split_matrices(matrix1, matrix2, seed=None):
     matrix1 = np.atleast_2d(matrix1).T  
     matrix2 = np.atleast_2d(matrix2).T  
     
-
-    
-    
-
     assert matrix1.shape[0] == matrix2.shape[0], "Las matrices deben tener el mismo número de filas."
 
     num_rows = matrix1.shape[0]
@@ -256,13 +252,5 @@ def gradiente_training(a, b):
 
     return best_error, best_beta,best_grado,iteration
 
-data = pd.read_csv("data.csv")
-data = data.values 
 
-a=quitar_ultima_columna(data)
-b=result_vector(data)
-b = b.reshape(-1, 1)
-
-err,beta,grado,iteration=gradiente_training(a,b)
-print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
 

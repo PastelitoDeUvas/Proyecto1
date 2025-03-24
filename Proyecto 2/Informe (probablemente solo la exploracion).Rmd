@@ -70,17 +70,17 @@ test_standardized %>%
   geom_boxplot(fill = "lightblue") +
   theme_minimal()
 
-outliers <- test_standardized
-  pivot_longer(cols = c(NO2, PM10, SO2, CO, O3, AQI), names_to = "Variable", values_to = "Valor") %>%
-  group_by(Variable) %>%
-  summarise(
-    Q1 = quantile(Valor, 0.25),
-    Q3 = quantile(Valor, 0.75),
-    IQR = Q3 - Q1,
-    Lower_Bound = Q1 - 1.5 * IQR,
-    Upper_Bound = Q3 + 1.5 * IQR,
-    Outliers = sum(Valor < Lower_Bound | Valor > Upper_Bound)
-  )
+outliers <- test_standardized %>%
+  summarise(across(everything(), 
+                   ~{
+                     Q1 <- quantile(.x, 0.25, na.rm = TRUE)
+                     Q3 <- quantile(.x, 0.75, na.rm = TRUE)
+                     IQR <- Q3 - Q1
+                     Lower_Bound <- Q1 - 1.5 * IQR
+                     Upper_Bound <- Q3 + 1.5 * IQR
+                     sum(.x < Lower_Bound | .x > Upper_Bound, na.rm = TRUE)
+                   }, 
+                   .names = "Outliers_{.col}"))
 print(outliers)
 
 
@@ -88,9 +88,25 @@ print(outliers)
 
 
 ```{python}
-import codes
+import sys
 
+sys.path.append("C:\\Users\\JUAN\\Desktop\\Algebra-lineal\\Proyecto 1 (K-means)\\repositorio\\Proyecto 2")
+import codes as cd
+import pandas as pd
 
+data = pd.read_csv("data.csv")
+data = data.values 
+
+a=cd.quitar_ultima_columna(data)
+b=cd.result_vector(data)
+
+err,beta,grado=cd.pseudo_training(a,b)
+print("error: ", err, " beta " , beta , " grado " , grado)
+
+b = b.reshape(-1, 1)
+
+err,beta,grado,iteration=cd.gradiente_training(a,b)
+print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
 ```
 
 

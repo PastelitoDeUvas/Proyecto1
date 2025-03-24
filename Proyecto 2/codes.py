@@ -2,12 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+
 def split_matrices(matrix1, matrix2, seed=None):
     if seed is not None:
         np.random.seed(seed)  
 
     matrix1 = np.atleast_2d(matrix1).T  
     matrix2 = np.atleast_2d(matrix2).T  
+    
+
     
     
 
@@ -83,9 +86,11 @@ def pseudoinversa(A, b):
 
 def gradiente_descendente(A, b, lr=0.01, max_iter=1000000):
     m, n = A.shape
-    beta = np.zeros(n)  # Inicializamos los coeficientes en cero
+    b = b.reshape(-1, 1)  # Asegurar que b sea una matriz columna
+    beta = np.zeros((n, 1))
     error_anterior = np.inf
     iteraciones = 0
+    
     
     
     
@@ -150,7 +155,7 @@ def encontrar_minimo(lista_de_listas):
 
     return min_valor, min_i, min_j
 
-def model_training(a, b):
+def pseudo_training(a, b):
     all_errores = []  # Lista para los errores
     all_betas = []  # Lista para los betas
     all_grados =[]
@@ -198,5 +203,66 @@ def model_training(a, b):
     return best_error, best_beta,best_grado
 
 
-    
-    
+
+def gradiente_training(a, b):
+    all_errores = []  # Lista para los errores
+    all_betas = []  # Lista para los betas
+    all_grados =[]
+    all_iteraciones=[]
+
+    plt.figure(figsize=(8, 5))  # Crear una sola figura
+
+    for k in range(1, 10):
+        errores = []  # Lista para los errores
+        grados = []  # Lista de grados
+        betas_list = []  # Lista para los betas
+        iteraciones_list=[]
+
+        a_20, b_20, a_80, b_80 = split_matrices(a.T, b.T, seed=k**7)
+
+        for i in range(1, 10):  
+            a_transf = create_variable_matrix(a_20, grado=i)
+            beta,iteraciones = gradiente_descendente(a_transf, b_20, lr=0.01, max_iter=1000000)
+
+            if beta is None:
+                continue  # Si no se puede calcular beta, saltamos la iteración
+
+            betas_list.append(beta)
+            iteraciones_list.append(iteraciones)
+
+            a_transf = create_variable_matrix(a_80, grado=i)
+            err = error(a_transf, b_80, beta)
+            errores.append(err)
+            grados.append(i)
+
+        all_errores.append(errores)
+        all_betas.append(betas_list)
+        all_grados.append(grados)
+        all_iteraciones.append(iteraciones_list)
+
+        plt.plot(grados, errores, marker='o', linestyle='-', label=f'Iter {k}')
+
+    plt.xlabel('Grado del Modelo')
+    plt.ylabel('Error')
+    plt.title('Error vs. Grado del Modelo')
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+    best_error, i, j = encontrar_minimo(all_errores)
+    best_beta = all_betas[i][j]  # Indexación corregida
+    best_grado =all_grados[i][j]
+    iteration =all_iteraciones[i][j]
+
+    return best_error, best_beta,best_grado,iteration
+
+data = pd.read_csv("data.csv")
+data = data.values 
+
+a=quitar_ultima_columna(data)
+b=result_vector(data)
+b = b.reshape(-1, 1)
+
+err,beta,grado,iteration=gradiente_training(a,b)
+print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
+

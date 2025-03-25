@@ -1,7 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-
 
 def split_matrices(matrix1, matrix2, seed=None):
     if seed is not None:
@@ -21,8 +19,6 @@ def split_matrices(matrix1, matrix2, seed=None):
 
     return matrix1[indices], matrix2[indices], matrix1[mask], matrix2[mask]
 
-
-
 def quitar_ultima_columna(matriz):
     """Elimina la última columna de una matriz dada."""
     if matriz.shape[1] == 1:
@@ -30,11 +26,9 @@ def quitar_ultima_columna(matriz):
     
     return matriz[:, :-1]
 
-
 def result_vector(matriz):
 
     return matriz[:, -1]
-
 
 def create_variable_matrix(matriz, grado=1):
 
@@ -55,12 +49,6 @@ def create_variable_matrix(matriz, grado=1):
 
     return np.column_stack(columnas)
 
-
-
-
-
-
-
 def pseudoinversa(A, b):
     """Calcula la solución de mínimos cuadrados usando la pseudoinversa manualmente.
        Si (A^T A) no es invertible, lo indica."""
@@ -77,8 +65,6 @@ def pseudoinversa(A, b):
     beta = np.linalg.solve(AtA, Atb)
     
     return beta
-
-
 
 def gradiente_descendente(A, b, lr=0.01, max_iter=1000000):
     m, n = A.shape
@@ -104,12 +90,10 @@ def gradiente_descendente(A, b, lr=0.01, max_iter=1000000):
     
     return beta, iteraciones
 
-# 💖 Función para calcular error 💖
 def error(A, b, beta):
     predicciones = A @ beta  # Calculamos las predicciones
     error = np.linalg.norm(b - predicciones)  # Error en norma euclidiana
     return error
-
 
 def pseudoinversa_data (A,b):
     
@@ -121,7 +105,6 @@ def pseudoinversa_data (A,b):
         print(f"Coeficiente β{i}: {beta_pinv[i]:.2f}")
     print(f"Error: {error_pinv:.2f}")
     
-
 def gradiente_descendente_data (A,b):
 
     beta_gd, iteraciones= gradiente_descendente(A, b)
@@ -136,8 +119,6 @@ def gradiente_descendente_data (A,b):
     print(f"Error: {error_gd:.2f}")
     print(f"Número de iteraciones: {iteraciones}")
     
-
-
 def encontrar_minimo(lista_de_listas):
     """Encuentra el valor mínimo en una lista de listas y su posición."""
     min_valor = float('inf')
@@ -158,14 +139,14 @@ def pseudo_training(a, b):
 
     plt.figure(figsize=(8, 5))  # Crear una sola figura
 
-    for k in range(1, 10):
+    for k in range(1, 4):
         errores = []  # Lista para los errores
         grados = []  # Lista de grados
         betas_list = []  # Lista para los betas
 
         a_20, b_20, a_80, b_80 = split_matrices(a.T, b, seed=k**7)
 
-        for i in range(1, 10):  
+        for i in range(1, 4):  
             a_transf = create_variable_matrix(a_20, grado=i)
             beta = pseudoinversa(a_transf, b_20)
 
@@ -198,8 +179,6 @@ def pseudo_training(a, b):
 
     return best_error, best_beta,best_grado
 
-
-
 def gradiente_training(a, b):
     all_errores = []  # Lista para los errores
     all_betas = []  # Lista para los betas
@@ -208,7 +187,7 @@ def gradiente_training(a, b):
 
     plt.figure(figsize=(8, 5))  # Crear una sola figura
 
-    for k in range(1, 10):
+    for k in range(1, 4):
         errores = []  # Lista para los errores
         grados = []  # Lista de grados
         betas_list = []  # Lista para los betas
@@ -216,7 +195,7 @@ def gradiente_training(a, b):
 
         a_20, b_20, a_80, b_80 = split_matrices(a.T, b.T, seed=k**7)
 
-        for i in range(1, 10):  
+        for i in range(1, 4):  
             a_transf = create_variable_matrix(a_20, grado=i)
             beta,iteraciones = gradiente_descendente(a_transf, b_20, lr=0.01, max_iter=1000000)
 

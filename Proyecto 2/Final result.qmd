@@ -1,15 +1,10 @@
 ---
-title: "Proyecto 2 (Modelo AQI)"
-author: "Monica Vargas Vallejo"
-date: "`r Sys.Date()`"
-output: html_document
+title: "Proyecto 2"
+format: html
+editor: visual
 ---
 
-
-
-
-#Library
-```{r message=FALSE, warning=FALSE,echo=FALSE}
+```{r message=FALSE,warning=FALSE,echo=FALSE}
 # Cargar librerías necesarias
 
 ipak <- function(pkg){
@@ -24,9 +19,7 @@ ipak(packages)
 
 ```
 
-
-#Read Files
-```{r message=FALSE, warning=FALSE,echo=FALSE}
+```{r message=FALSE,warning=FALSE}
 data <- read.csv('data.csv')
 
 #General inspection (unicamente un formalismo)
@@ -83,11 +76,9 @@ outliers <- test_standardized %>%
                    .names = "Outliers_{.col}"))
 print(outliers)
 
-
 ```
 
-
-```{python}
+```{python }
 import sys
 
 sys.path.append("C:\\Users\\JUAN\\Desktop\\Algebra-lineal\\Proyecto 1 (K-means)\\repositorio\\Proyecto 2")
@@ -108,13 +99,3 @@ b = b.reshape(-1, 1)
 err,beta,grado,iteration=cd.gradiente_training(a,b)
 print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
 ```
-
-
-
-
-
-
-
-
-
-

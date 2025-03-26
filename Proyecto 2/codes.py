@@ -231,5 +231,8 @@ def gradiente_training(a, b):
 
     return best_error, best_beta,best_grado,iteration
 
-
+def condicion (a) :
+    ata=a.T @ a
+    condi= np.linalg.cond(ata)
+    return condi
 

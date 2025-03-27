@@ -127,7 +127,7 @@ $$
 donde ( \sigma*{*\max} ) y ( \sigma{\min} ) son los valores singulares máximo y mínimo de ( A ), respectivamente.
 
 -   Si ( \kappa(X\^\top X) ) es **bajo**, la matriz está bien condicionada y el cálculo de ( (X\top X){-1} ) es estable.
--   Si ( \kappa(X\^\top X) ) es **alto**, la matriz está mal condicionada, lo que significa que pequeñas variaciones en los datos pueden causar grandes cambios en ( \beta ), afectando la precisión del modelo. **¿Tiene algún problema este número de condición?** 
+-   Si ( \kappa(X\^\top X) ) es **alto**, la matriz está mal condicionada, lo que significa que pequeñas variaciones en los datos pueden causar grandes cambios en ( \beta ), afectando la precisión del modelo. **¿Tiene algún problema este número de condición?**
 
 Calculamos el numero de condicion mediante numpy :
 
@@ -200,11 +200,7 @@ print("=" * 40)
 
 ### 3. Gradiente Descendente
 
-**a) Explica por qué se normalizan las características antes de aplicar gradiente descendente**
-Es importante normalizar las caracteristicas antes de aplicar el modeelo debido a las siguientes razones:
--Evita que alguna de las caracteristicas domine el entrenamiento del modelo,debido a que si una de las caracteristicas esta en millones y otra entre 1y 0 , la que esta en millones tendra mucho mas peso  que la otra , por lo que su convergencia seria mas lenta y su error mayor 
--acelera la convergencia ya que con cada iteracion ajusta el peso de cada caracteristica, por lo que si sus escalas son muy diferentes , esto puede resultar en un error mayor y una convergencia mas lenta
--Los calculos del gradiente pueden verse afectados por valores extremos
+**a) Explica por qué se normalizan las características antes de aplicar gradiente descendente** Es importante normalizar las caracteristicas antes de aplicar el modeelo debido a las siguientes razones: -Evita que alguna de las caracteristicas domine el entrenamiento del modelo,debido a que si una de las caracteristicas esta en millones y otra entre 1y 0 , la que esta en millones tendra mucho mas peso que la otra , por lo que su convergencia seria mas lenta y su error mayor -acelera la convergencia ya que con cada iteracion ajusta el peso de cada caracteristica, por lo que si sus escalas son muy diferentes , esto puede resultar en un error mayor y una convergencia mas lenta -Los calculos del gradiente pueden verse afectados por valores extremos
 
 **b) Implementa un algoritmo de gradiente descendente para regresión lineal, unicamente usando “numpy”, incluyendo términos cuadráticos, cúbicos, etc. para mejorar el ajuste del modelo. para mejorar el ajuste del modelo. Escoja el modelo que mejor se ajuste a los datos test.**
 
@@ -240,22 +236,22 @@ print(f"Coeficiente R²     : {error_r2:.4f}")
 print("=" * 50)
 
 ```
+
 **c) si los modelos de gradiente descendente y ecuación normal son diferentes, ¿cuál es el motivo?, y si son iguales, ¿cual tiene mejor desempeño?**
 
-Ambos modelos dan resultados casi identicos con una diferencia en su error de menos de 10^-8 , pero dada la complejidad computacional de cada uno , lo mejor es tomar el de ecuaaciones normales ,que converge de forma mas rapida y con menos trabajo 
-
+Ambos modelos dan resultados casi identicos con una diferencia en su error de menos de 10\^-8 , pero dada la complejidad computacional de cada uno , lo mejor es tomar el de ecuaaciones normales ,que converge de forma mas rapida y con menos trabajo
 
 **c) ¿Qué ventajas tiene el gradiente descendente sobre la ecuación normal?**
 
--Cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional 
+-Cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional
 
--Si se trata de un grupo de datos muy grande con un gran numero de caracteristicas ,el gradiente descendiente lograra converger a un resultado de forma mas rapida que las ecuaciones normales 
+-Si se trata de un grupo de datos muy grande con un gran numero de caracteristicas ,el gradiente descendiente lograra converger a un resultado de forma mas rapida que las ecuaciones normales
 
 -Requiere de un uso menor de memoria al solo almacenar los pesos y los parametros, a diferencia de las ecuaciones normales que necesitan manipular y almacenar todas las matrices por completo
 
 **d) Si el MSE no disminuye después de 200 épocas, ¿qué hiperparámetros ajustarías?**
 
-Si el MSE no disminuye despues de 200 epocas es porque debe estar atascado debido a que la tasa de aprendizaje es muy baja , lo que genera que los cambios en los pesos sean muy pequeños o casi insignificantes , resultando en periodos muy largos para converger , o incluso se puede dar el caso de que no logre converger 
+Si el MSE no disminuye despues de 200 epocas es porque debe estar atascado debido a que la tasa de aprendizaje es muy baja , lo que genera que los cambios en los pesos sean muy pequeños o casi insignificantes , resultando en periodos muy largos para converger , o incluso se puede dar el caso de que no logre converger
 
 ### 4. Cross Validation
 
@@ -275,6 +271,6 @@ Este enfoque garantiza una evaluación más robusta del desempeño del modelo y 
 
 Al comparar los resultados obtenidos con las ecuaciones normales y el descenso de gradiente, se observa que las ecuaciones normales ofrecen un modelo con un error cuadrático medio (MSE) menor, lo que indica un mejor ajuste en términos de minimización del error absoluto.
 
-Además, el MSE mide el error en las mismas unidades que la variable objetivo, permitiendo interpretar directamente la magnitud de las desviaciones del modelo. En contraste, 𝑅^2 es una métrica relativa, lo que significa que solo muestra qué porcentaje de la variabilidad de los datos es explicado por el modelo, sin proporcionar información sobre el error absoluto real.
+Además, el MSE mide el error en las mismas unidades que la variable objetivo, permitiendo interpretar directamente la magnitud de las desviaciones del modelo. En contraste, 𝑅\^2 es una métrica relativa, lo que significa que solo muestra qué porcentaje de la variabilidad de los datos es explicado por el modelo, sin proporcionar información sobre el error absoluto real.
 
 En este caso, el MSE ha resultado ser una mejor métrica para evaluar el desempeño del modelo, ya que refleja con mayor precisión la calidad del ajuste en términos de los errores absolutos cometidos por la regresión.

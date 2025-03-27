@@ -4,10 +4,10 @@ from tabulate import tabulate
 
 def standardize(A):
 
-    mean = np.mean(A)  # Media de toda la matriz
-    std = np.std(A)    # Desviación estándar de toda la matriz
+    mean = np.mean(A, axis=0)  # Media de cada columna
+    std = np.std(A, axis=0)    # Desviación estándar de cada columna
     
-    return (A - mean) / std if std != 0 else A  # Evita división por cero
+    return (A - mean) / std  # Estandarización por columnas
 
 
 def split_matrices(matrix1, matrix2, seed=None):

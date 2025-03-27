@@ -194,7 +194,7 @@ def pseudo_training(a, b):
             betas_list.append(beta)
 
             a_transf = create_variable_matrix(a_80, grado=i)
-            err = error(a_transf, b_80, beta)*17.5
+            err = error(a_transf, b_80, beta)
             errores.append(err)
             grados.append(i)
 
@@ -246,7 +246,7 @@ def gradiente_training(a, b):
             iteraciones_list.append(iteraciones)
 
             a_transf = create_variable_matrix(a_80, grado=i)
-            error_cuadratico = error(a_transf, b_80, beta)*17.5
+            error_cuadratico = error(a_transf, b_80, beta)
             errores.append(error_cuadratico)
             
             grados.append(i)

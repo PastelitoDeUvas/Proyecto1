@@ -174,10 +174,26 @@ Implemente un algoritmo que:
 
 ```{python }
 #| code-fold: true
-
+import numpy as np
 err,beta,grado=cd.pseudo_training(a,b)
 error_r2=cd.r2(a,b,beta)
-print("error cuadratico: ", err, "beta",  beta ," grado " , grado,"R2",error_r2)
+
+
+print("=" * 40)
+print("         Resultados del Modelo         ")
+print("=" * 40)
+print(f"Error cuadrático  : {err:.4f}")
+print(f"Grado del modelo  : {grado}")
+print("Coeficientes beta :")
+
+# Asegurar que beta es una lista para evitar errores de formato
+beta = np.array(beta).flatten().tolist()  
+
+for i, b in enumerate(beta, start=1):
+    print(f"   β{i}: {b:.4f}")
+
+print(f"Coeficiente R²    : {error_r2:.4f}")
+print("=" * 40)
 
 
 ```
@@ -194,6 +210,7 @@ Es importante normalizar las caracteristicas antes de aplicar el modeelo debido 
 
 ```{python}
 #| code-fold: true
+import numpy as np
 data = cd.standardize(data)
 a=cd.quitar_ultima_columna(data)
 b=cd.result_vector(data)
@@ -203,7 +220,24 @@ b = b.reshape(-1, 1)
 
 err,beta,grado,iteration=cd.gradiente_training(a,b)
 error_r2=cd.r2(a,b,beta)
-print("error",err,"beta",beta,"grado",grado,"iteracion",iteration,"R2",error_r2)
+
+print("=" * 50)
+print("             Resultados del Modelo             ")
+print("=" * 50)
+print(f"Error cuadrático   : {err:.4f}")
+print(f"Grado del modelo   : {grado}")
+print(f"Iteraciones        : {iteration}")
+print("Coeficientes beta  :")
+
+# Asegurar que beta es una lista para evitar errores de formato
+
+beta = np.array(beta).flatten().tolist()  
+
+for i, b in enumerate(beta, start=1):
+    print(f"   β{i}: {b:.4f}")
+
+print(f"Coeficiente R²     : {error_r2:.4f}")
+print("=" * 50)
 
 ```
 **c) si los modelos de gradiente descendente y ecuación normal son diferentes, ¿cuál es el motivo?, y si son iguales, ¿cual tiene mejor desempeño?**

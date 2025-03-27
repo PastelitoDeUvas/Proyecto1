@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 
-def standardize_matrix(A):
+def standardize(A):
 
     mean = np.mean(A)  # Media de toda la matriz
     std = np.std(A)    # Desviación estándar de toda la matriz

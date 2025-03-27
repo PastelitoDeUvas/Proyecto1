@@ -2,6 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 
+def standardize_matrix(A):
+
+    mean = np.mean(A)  # Media de toda la matriz
+    std = np.std(A)    # Desviación estándar de toda la matriz
+    
+    return (A - mean) / std if std != 0 else A  # Evita división por cero
+
+
 def split_matrices(matrix1, matrix2, seed=None):
     if seed is not None:
         np.random.seed(seed)  

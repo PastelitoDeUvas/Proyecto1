@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate
+import pandas as pd
+
 
 def standardize(A):
 
@@ -8,7 +10,6 @@ def standardize(A):
     std = np.std(A, axis=0)    # Desviación estándar de cada columna
     
     return (A - mean) / std  # Estandarización por columnas
-
 
 def split_matrices(matrix1, matrix2, seed=None):
     if seed is not None:
@@ -75,12 +76,34 @@ def pseudoinversa(A, b):
     
     return beta
 
+def r2_matriz(matriz):
+    matriz = np.atleast_2d(matriz)  # Asegurar que sea bidimensional
+    m, n = matriz.shape  # Obtener dimensiones correctamente
 
-def r2(y_true, y_pred):
-    ss_res = np.sum((y_true - y_pred) ** 2)  # Suma de los residuos al cuadrado
-    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)  # Suma total de cuadrados
+    columnas = [np.ones(m)]  # Primera columna de 1s (intercepto en regresión)
+
+    for g in range(1, 3):
+        for i in range(n):  
+            columnas.append(matriz[:, i]**g)  # Agregar términos elevados a `g`
+
+    return np.column_stack(columnas)
+
+def r2(a, b, beta):
+    a = r2_matriz(a) 
+    a = np.atleast_2d(a)  # Asegurar que `a` es bidimensional
+    beta = beta.reshape(-1, 1) if beta.ndim == 1 else beta  # Convertir `beta` a (n,1)
+    b = b.reshape(-1, 1) if b.ndim == 1 else b  # Asegurar que `b` sea (m,1)
+
+    print(f"a.shape: {a.shape}, beta.shape: {beta.shape}, b.shape: {b.shape}")  # Depuración
+
+    aprox = a @ beta  # Multiplicación segura
+
+    print(f"aprox.shape: {aprox.shape}")  # Depuración
+
+    ss_res = np.sum((b - aprox) ** 2)  # Suma de los residuos al cuadrado
+    ss_tot = np.sum((b - np.mean(b)) ** 2)  # Suma total de cuadrados
+    
     return 1 - (ss_res / ss_tot)
-
 
 def gradiente_descendente(A, b, lr=0.01, max_iter=1000000):
     m, n = A.shape
@@ -106,9 +129,13 @@ def gradiente_descendente(A, b, lr=0.01, max_iter=1000000):
     
     return beta, iteraciones
 
-def error(A, b, beta):
-    predicciones = A @ beta  # Calculamos las predicciones
-    error = np.linalg.norm(b - predicciones)  # Error en norma euclidiana
+def error(a, b, beta):
+    
+
+    aprox = a @ beta  # Multiplicación segura
+
+    
+    error = np.mean((b - aprox) ** 2) 
     return error
 
 def pseudoinversa_data (A,b):
@@ -172,7 +199,7 @@ def pseudo_training(a, b):
             betas_list.append(beta)
 
             a_transf = create_variable_matrix(a_80, grado=i)
-            err = error(a_transf, b_80, beta)
+            err = error(a_transf, b_80, beta)*17.5
             errores.append(err)
             grados.append(i)
 
@@ -270,5 +297,9 @@ def condicion(A):
     ]
     
     print(tabulate(tabla, headers=["Concepto", "Valor"], tablefmt="fancy_grid"))
+
+
+
+    data = pd.read_csv("data.csv")
 
 

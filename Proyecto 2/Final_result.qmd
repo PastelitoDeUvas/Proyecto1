@@ -210,5 +210,15 @@ Ambos modelos dan resultados casi identicos con una diferencia en su error de me
 
 
 **c) ¿Qué ventajas tiene el gradiente descendente sobre la ecuación normal?**
--cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional 
--
+
+-Cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional 
+-Si se trata de un grupo de datos muy grande con un gran numero de caracteristicas ,el gradiente descendiente lograra converger a un resultado de forma mas rapida que las ecuaciones normales 
+-Requiere de un uso menor de memoria al solo almacenar los pesos y los parametros, a diferencia de las ecuaciones normales que necesitan manipular y almacenar todas las matrices por completo
+
+**d) Si el MSE no disminuye después de 200 épocas, ¿qué hiperparámetros ajustarías?**
+
+Si el MSE no disminuye despues de 200 epocas es porque debe estar atascado debido a que la tasa de aprendizaje es muy baja , lo que genera que los cambios en los pesos sean muy pequeños o casi insignificantes , resultando en periodos muy largos para converger , o incluso se puede dar el caso de que no logre converger 
+
+### 4. Cross Validation
+
+**b) ¿Qué ventajas tiene la validación cruzada sobre la división de los datos en entrenamiento y test?**

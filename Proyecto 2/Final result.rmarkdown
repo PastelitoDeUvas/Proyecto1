@@ -1,0 +1,226 @@
+---
+title: "Actividad: Regresión Lineal con Términos Cuadráticos"
+format:
+  html:
+    theme: minty  # Puedes probar también "journal" o "flatly"
+    css: estilo.css
+
+editor: visual
+---
+
+
+
+## Contexto
+
+Eres parte de un equipo de científicos de datos en una startup ambiental que busca predecir el índice de calidad del aire (AQI) en ciudades de Europa. Los datos simulados contienen 5 variables predictoras:
+
+-   **NO2** (dióxido de nitrógeno)
+-   **PM10** (partículas en suspensión)
+-   **SO2** (dióxido de azufre)
+-   **CO** (monóxido de carbono)
+-   **O3** (ozono)
+
+Tu propósito es modelar el AQI a partir de estas variables para predecir la calidad del aire en tiempo real. Para esto, debes implementar un modelo de regresión lineal que mejor se ajuste a los datos y evaluar su desempeño con validación cruzada. El modelo puede incluir términos cuadráticos, cúbicos o combinaciones de estas transformaciones para mejorar su precisión.
+
+------------------------------------------------------------------------
+
+## Preguntas
+
+### 1. Análisis Exploratorio y Preprocesamiento
+
+-   **a)** Realice un análisis exploratorio de los datos. En este caso, todas las variables son importantes para el modelo. Para este análisis, se recomienda visualizar la **correlación** de las variables entre ellas y con el AQI. ---
+
+
+
+```{r message=FALSE,warning=FALSE,echo=FALSE,include=FALSE}
+# Cargar librerías necesarias
+
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+packages <- c("readxl","tidyverse","GGally","dplyr","reticulate","knitr","kableExtra")
+ipak(packages)
+
+
+```
+
+```{r }
+#| code-fold: true
+data <- read.csv('data.csv')
+
+#General inspection (unicamente un formalismo)
+kable(data[1:5,]) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
+
+normalize_zscore <- function(x) {
+  return((x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE))
+}
+
+
+
+test <- data %>% sample_n(1000)
+
+test_standardized <- test %>%
+  mutate(across(c(NO2, PM10, SO2, CO, O3, AQI), normalize_zscore))
+
+#distribution analysis 
+test_standardized %>%
+  pivot_longer(cols = c(NO2, PM10, SO2, CO, O3, AQI), names_to = "Variable", values_to = "Valor") %>%
+  ggplot(aes(x = Valor, fill = Variable)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal()
+
+#Variable Relation 
+
+ggpairs(test_standardized, columns = c("NO2", "PM10", "SO2", "CO", "O3", "AQI"), aes(alpha = 0.5))
+corr_matrix <- cor(test_standardized %>% select(NO2, PM10, SO2, CO, O3, AQI)) 
+corrplot::corrplot(corr_matrix, method = "color", type = "lower", tl.col = "black", addCoef.col = "black")
+
+
+
+
+
+```
+
+
+
+## 2. Ecuación Normal
+
+**a) Deriva matemáticamente la ecuación normal para \\( \\theta \\), incluyendo términos cuadráticos, cúbicos, etc.:**
+
+$$
+\hat{\beta} = (X^\top X)^{-1} X^\top y
+$$
+El error cuadratico esta dado por :
+
+$$
+\varepsilon(\beta) = || y - X\beta ||^2
+$$
+
+
+Naturalmente como y y x no estan en el mismo plano , lo que necesitamos es sumarle un error \varepsilon , para lograr que este error sea el menor posible es necesario que sea ortogonal al plano , y eso solo se consigue en los puntos donde su derivada es cero, por tanto derivamos \varepsilon con respecto a \beta
+
+$$
+\frac{d\varepsilon}{d\beta} = -2 X^\top (y - X\beta)
+$$
+
+Ya que tenemos la derivada , encontramos el punto critico igualando a cero 
+
+$$
+X^\top (y - X\beta) = 0
+$$
+
+Resolviendo para ( \beta ):
+
+$$
+X^\top X \beta = X^\top y
+$$
+
+Lo que en efecto nos da la ecuacion normal 
+$$
+\beta = (X^\top X)^{-1} X^\top y
+$$
+**b) Si  X^\top X , ¿cómo es la condición de la matriz? ¿Tiene algún problema este número de condición?**
+
+La condición de la matriz \( X^\top X \) se evalúa mediante el **número de condición**, que es una métrica que indica cuán sensible es la solución de un sistema de ecuaciones a pequeñas perturbaciones en los datos.
+
+**Condición de la matriz \( X^\top X \)**
+El número de condición de una matriz \( A \) se define como:
+
+$$
+\kappa(A) = \frac{\sigma_{\max}}{\sigma_{\min}}
+$$
+
+donde \( \sigma_{\max} \) y \( \sigma_{\min} \) son los valores singulares máximo y mínimo de \( A \), respectivamente.
+
+- Si \( \kappa(X^\top X) \) es **bajo**, la matriz está bien condicionada y el cálculo de \( (X^\top X)^{-1} \) es estable.
+- Si \( \kappa(X^\top X) \) es **alto**, la matriz está mal condicionada, lo que significa que pequeñas variaciones en los datos pueden causar grandes cambios en \( \beta \), afectando la precisión del modelo.
+**¿Tiene algún problema este número de condición?**
+Si \(X\) contiene características altamente correlacionadas, \(X^\top X\) puede volverse **casi singular**, resultando en un número de condición alto. Esto puede causar problemas numéricos al calcular \( (X^\top X)^{-1} \), afectando la estabilidad de la ecuación normal.
+
+Para evaluar esto en la práctica, podemos calcular \( \kappa(X^\top X) \) con `numpy`:
+
+
+
+```{python}
+#| code-fold: true
+import sys
+
+sys.path.append("C:\\Users\\JUAN\\Desktop\\Algebra-lineal\\Proyecto 1 (K-means)\\repositorio\\Proyecto 2")
+import codes as cd
+import pandas as pd
+
+data = pd.read_csv("data.csv")
+data = data.values 
+
+a=cd.quitar_ultima_columna(data)
+b=cd.result_vector(data)
+cd.condicion(a)
+
+```
+
+
+
+
+
+
+**c) ¿Qué ventajas tiene la ecuación normal sobre el gradiente descendente?**
+
+Las principales ventajas que tiene la ecuación normal sobre el gradiente son:
+
+- Da la solución óptima directamente, a diferencia del gradiente que requiere de un proceso iterativo.  
+- No requiere de hiperparámetros, mientras que el gradiente necesita elegir una tasa de aprendizaje adecuada.  
+- La implementación en código es más sencilla que la del gradiente.  
+- Dado que solo usamos 5 características, la complejidad de la ecuación normal es \( 5^3 = 125 \), mientras que la del gradiente es \( 5 \times 10000 = 50000 \).  
+  En este caso, es mucho más eficiente aplicar la ecuación normal que el gradiente descendente.  
+
+**d) Implementación del modelo**
+
+Implemente un algoritmo que:  
+
+1. Divida los datos en 80% para entrenamiento y 20% para prueba.  
+2. Use únicamente la librería `numpy`.  
+3. Calcule los coeficientes \( \hat{\beta} \) de la regresión lineal, incluyendo términos cuadráticos, cúbicos, etc., para mejorar el ajuste del modelo.  
+4. Seleccione el modelo que mejor se ajuste a los datos de prueba.  
+
+
+
+
+
+
+```{python }
+#| code-fold: true
+import sys
+
+sys.path.append("C:\\Users\\JUAN\\Desktop\\Algebra-lineal\\Proyecto 1 (K-means)\\repositorio\\Proyecto 2")
+import codes as cd
+import pandas as pd
+
+data = pd.read_csv("data.csv")
+data = data.values 
+
+a=cd.quitar_ultima_columna(data)
+b=cd.result_vector(data)
+condicio =cd.condicion(a)
+print ("Numero de condicion :",condicio)
+err,beta,grado=cd.pseudo_training(a,b)
+print("error: ", err, " beta " , beta , " grado " , grado)
+
+b = b.reshape(-1, 1)
+
+err,beta,grado,iteration=cd.gradiente_training(a,b)
+print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
+```
+
+```{python}
+#| code-fold: true
+b = b.reshape(-1, 1)
+
+err,beta,grado,iteration=cd.gradiente_training(a,b)
+print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
+```
+

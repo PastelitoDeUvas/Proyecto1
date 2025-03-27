@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from tabulate import tabulate
 
 def split_matrices(matrix1, matrix2, seed=None):
     if seed is not None:

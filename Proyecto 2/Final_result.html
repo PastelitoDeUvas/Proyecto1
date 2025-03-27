@@ -272,9 +272,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-</section>
-<section id="ecuación-normal" class="level2">
-<h2 class="anchored" data-anchor-id="ecuación-normal">2. Ecuación Normal</h2>
+<section id="ecuación-normal" class="level3">
+<h3 class="anchored" data-anchor-id="ecuación-normal">2. Ecuación Normal</h3>
 <p><strong>a) Deriva matemáticamente la ecuación normal para \( \theta \), incluyendo términos cuadráticos, cúbicos, etc.:</strong></p>
 <p><span class="math display">\[
 \hat{\beta} = (X^\top X)^{-1} X^\top y
@@ -320,20 +319,35 @@ X^\top X \beta = X^\top y
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"data.csv"</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.values </span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>cd.condicion(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> cd.standardize(data)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>cd.condicion(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>╒═══════════════════════╤══════════╕
-│ Concepto              │    Valor │
-╞═══════════════════════╪══════════╡
-│ Valor Singular Máximo │ 318.125  │
-├───────────────────────┼──────────┤
-│ Valor Singular Mínimo │ 315.225  │
-├───────────────────────┼──────────┤
-│ Número de Condición   │   1.0092 │
-╘═══════════════════════╧══════════╛</code></pre>
+<pre><code>╒═══════════════════════╤═══════════╕
+│ Concepto              │     Valor │
+╞═══════════════════════╪═══════════╡
+│ Valor Singular Máximo │ 317.861   │
+├───────────────────────┼───────────┤
+│ Valor Singular Mínimo │ 315.13    │
+├───────────────────────┼───────────┤
+│ Número de Condición   │   1.00867 │
+╘═══════════════════════╧═══════════╛</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 0.49938539 -0.14262092  0.65106094  1.52603418 -0.23886967 -0.23793875]
+ [-0.23010608  1.57605134  0.77065925 -0.46197206  0.53969558 -0.57153711]
+ [-0.45896027 -0.47031425  0.24583574 -1.90251858 -1.7331884   0.58460168]
+ ...
+ [-0.09404547  0.21864417 -1.38712134  0.25165755 -0.60315027 -0.66723903]
+ [-0.21974066  0.84397402 -1.38510749 -0.63802186  0.30540902 -0.56254631]
+ [ 1.33473452 -0.11409328 -0.23922129 -0.78921694 -1.64920422  0.5968963 ]]</code></pre>
 </div>
 </div>
 <p>Dado que el numero de condicion es cercano a 1 ,podemos afirmar que la matriz esta bien condicionada , al tener sus valores singulares maximos y minmos muy cerca entre si , por lo que pequeñas perturbaciones no afectan la matriz</p>
@@ -363,40 +377,7 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sys.path.append(<span class="st">"C:</span><span class="ch">\\</span><span class="st">Users</span><span class="ch">\\</span><span class="st">JUAN</span><span class="ch">\\</span><span class="st">Desktop</span><span class="ch">\\</span><span class="st">Algebra-lineal</span><span class="ch">\\</span><span class="st">Proyecto 1 (K-means)</span><span class="ch">\\</span><span class="st">repositorio</span><span class="ch">\\</span><span class="st">Proyecto 2"</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> codes <span class="im">as</span> cd</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"data.csv"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.values </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>condicio <span class="op">=</span>cd.condicion(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>╒═══════════════════════╤══════════╕
-│ Concepto              │    Valor │
-╞═══════════════════════╪══════════╡
-│ Valor Singular Máximo │ 318.125  │
-├───────────────────────┼──────────┤
-│ Valor Singular Mínimo │ 315.225  │
-├───────────────────────┼──────────┤
-│ Número de Condición   │   1.0092 │
-╘═══════════════════════╧══════════╛</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">"Numero de condicion :"</span>,condicio)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Numero de condicion : None</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>err,beta,grado<span class="op">=</span>cd.pseudo_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>err,beta,grado<span class="op">=</span>cd.pseudo_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -407,84 +388,65 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error: "</span>, err, <span class="st">" beta "</span> , beta , <span class="st">" grado "</span> , grado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error: "</span>, err, <span class="st">" beta "</span> , beta , <span class="st">" grado "</span> , grado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>error:  141.8086086012805  beta  [[ 2.99360561e+00]
- [ 1.19981110e+00]
- [-9.01597489e-01]
- [ 2.30059341e+00]
- [-1.70103785e+00]
- [ 4.99724661e-01]
- [ 7.99927652e-01]
- [-1.29776289e+00]
- [ 1.09898761e+00]
- [-1.00897788e-02]
- [-1.16282003e-03]]  grado  2</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> b.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>err,beta,grado,iteration<span class="op">=</span>cd.gradiente_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Final_result_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="768"></p>
-</figure>
+<pre><code>error:  33.46334736667763  beta  [[-1.42209103e-01]
+ [ 2.82291253e-01]
+ [-2.15212695e-01]
+ [ 5.41385415e-01]
+ [-4.02280523e-01]
+ [ 1.17639989e-01]
+ [ 1.89467571e-01]
+ [-3.05814392e-01]
+ [ 2.59975809e-01]
+ [-2.39172615e-03]
+ [-2.73093190e-04]]  grado  2</code></pre>
 </div>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error"</span>,err,<span class="st">"beta"</span>,beta,<span class="st">"grado"</span>,grado,<span class="st">"iteracion"</span>,iteration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>error 141.80860876488128 beta [[ 2.99360547e+00]
- [ 1.19981110e+00]
- [-9.01597488e-01]
- [ 2.30059341e+00]
- [-1.70103785e+00]
- [ 4.99724661e-01]
- [ 7.99927674e-01]
- [-1.29776286e+00]
- [ 1.09898763e+00]
- [-1.00897576e-02]
- [-1.16279774e-03]] grado 2 iteracion 3221</code></pre>
-</div>
-</div>
+<p>###3. Gradiente Descendente</p>
+<p><strong>a) Explica por qué se normalizan las características antes de aplicar gradiente descendente</strong> Es importante normalizar las caracteristicas antes de aplicar el modeelo debido a las siguientes razones: -Evita que alguna de las caracteristicas domine el entrenamiento del modelo,debido a que si una de las caracteristicas esta en millones y otra entre 1y 0 , la que esta en millones tendra mucho mas peso que la otra , por lo que su convergencia seria mas lenta y su error mayor -acelera la convergencia ya que con cada iteracion ajusta el peso de cada caracteristica, por lo que si sus escalas son muy diferentes , esto puede resultar en un error mayor y una convergencia mas lenta -Los calculos del gradiente pueden verse afectados por valores extremos</p>
+<p><strong>b) Implementa un algoritmo de gradiente descendente para regresión lineal, unicamente usando “numpy”, incluyendo términos cuadráticos, cúbicos, etc. para mejorar el ajuste del modelo. para mejorar el ajuste del modelo. Escoja el modelo que mejor se ajuste a los datos test.</strong></p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> b.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>err,beta,grado,iteration<span class="op">=</span>cd.gradiente_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> cd.standardize(data)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> b.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>err,beta,grado,iteration<span class="op">=</span>cd.gradiente_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Final_result_files/figure-html/unnamed-chunk-5-5.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="Final_result_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error"</span>,err,<span class="st">"beta"</span>,beta,<span class="st">"grado"</span>,grado,<span class="st">"iteracion"</span>,iteration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error"</span>,err,<span class="st">"beta"</span>,beta,<span class="st">"grado"</span>,grado,<span class="st">"iteracion"</span>,iteration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>error 141.80860876488128 beta [[ 2.99360547e+00]
- [ 1.19981110e+00]
- [-9.01597488e-01]
- [ 2.30059341e+00]
- [-1.70103785e+00]
- [ 4.99724661e-01]
- [ 7.99927674e-01]
- [-1.29776286e+00]
- [ 1.09898763e+00]
- [-1.00897576e-02]
- [-1.16279774e-03]] grado 2 iteracion 3221</code></pre>
+<pre><code>error 33.46334732786364 beta [[-1.42209068e-01]
+ [ 2.82291253e-01]
+ [-2.15212695e-01]
+ [ 5.41385415e-01]
+ [-4.02280522e-01]
+ [ 1.17639989e-01]
+ [ 1.89467565e-01]
+ [-3.05814397e-01]
+ [ 2.59975804e-01]
+ [-2.39173119e-03]
+ [-2.73098433e-04]] grado 2 iteracion 2931</code></pre>
 </div>
 </div>
+<p><strong>c) si los modelos de gradiente descendente y ecuación normal son diferentes, ¿cuál es el motivo?, y si son iguales, ¿cual tiene mejor desempeño?</strong></p>
+<p>ambos modelos dan resul</p>
+</section>
 </section>
 
 </main>

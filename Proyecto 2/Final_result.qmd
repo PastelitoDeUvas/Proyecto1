@@ -82,7 +82,7 @@ corrplot::corrplot(corr_matrix, method = "color", type = "lower", tl.col = "blac
 
 ```
 
-## 2. Ecuación Normal
+### 2. Ecuación Normal
 
 **a) Deriva matemáticamente la ecuación normal para \\( \\theta \\), incluyendo términos cuadráticos, cúbicos, etc.:**
 
@@ -142,9 +142,13 @@ import pandas as pd
 data = pd.read_csv("data.csv")
 data = data.values 
 
+
+data = cd.standardize(data)
 a=cd.quitar_ultima_columna(data)
 b=cd.result_vector(data)
 cd.condicion(a)
+
+print (data)
 
 ```
 
@@ -171,32 +175,40 @@ Implemente un algoritmo que:
 
 ```{python }
 #| code-fold: true
-import sys
 
-sys.path.append("C:\\Users\\JUAN\\Desktop\\Algebra-lineal\\Proyecto 1 (K-means)\\repositorio\\Proyecto 2")
-import codes as cd
-import pandas as pd
-
-data = pd.read_csv("data.csv")
-data = data.values 
-
-a=cd.quitar_ultima_columna(data)
-b=cd.result_vector(data)
-condicio =cd.condicion(a)
-print ("Numero de condicion :",condicio)
 err,beta,grado=cd.pseudo_training(a,b)
 print("error: ", err, " beta " , beta , " grado " , grado)
 
-b = b.reshape(-1, 1)
 
-err,beta,grado,iteration=cd.gradiente_training(a,b)
-print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
 ```
+
+### 3. Gradiente Descendente
+
+**a) Explica por qué se normalizan las características antes de aplicar gradiente descendente**
+Es importante normalizar las caracteristicas antes de aplicar el modeelo debido a las siguientes razones:
+-Evita que alguna de las caracteristicas domine el entrenamiento del modelo,debido a que si una de las caracteristicas esta en millones y otra entre 1y 0 , la que esta en millones tendra mucho mas peso  que la otra , por lo que su convergencia seria mas lenta y su error mayor 
+-acelera la convergencia ya que con cada iteracion ajusta el peso de cada caracteristica, por lo que si sus escalas son muy diferentes , esto puede resultar en un error mayor y una convergencia mas lenta
+-Los calculos del gradiente pueden verse afectados por valores extremos
+
+**b) Implementa un algoritmo de gradiente descendente para regresión lineal, unicamente usando “numpy”, incluyendo términos cuadráticos, cúbicos, etc. para mejorar el ajuste del modelo. para mejorar el ajuste del modelo. Escoja el modelo que mejor se ajuste a los datos test.**
 
 ```{python}
 #| code-fold: true
+data = cd.standardize(data)
+a=cd.quitar_ultima_columna(data)
+b=cd.result_vector(data)
 b = b.reshape(-1, 1)
+
+
 
 err,beta,grado,iteration=cd.gradiente_training(a,b)
 print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
 ```
+**c) si los modelos de gradiente descendente y ecuación normal son diferentes, ¿cuál es el motivo?, y si son iguales, ¿cual tiene mejor desempeño?**
+
+Ambos modelos dan resultados casi identicos con una diferencia en su error de menos de 10^-8 , pero dada la complejidad computacional de cada uno , lo mejor es tomar el de ecuaaciones normales ,que converge de forma mas rapida y con menos trabajo 
+
+
+**c) ¿Qué ventajas tiene el gradiente descendente sobre la ecuación normal?**
+-cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional 
+-

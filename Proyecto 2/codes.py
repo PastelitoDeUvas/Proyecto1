@@ -259,3 +259,9 @@ def condicion(A):
     ]
     
     print(tabulate(tabla, headers=["Concepto", "Valor"], tablefmt="fancy_grid"))
+
+
+def r2(y_true, y_pred):
+    ss_res = np.sum((y_true - y_pred) ** 2)  # Suma de los residuos al cuadrado
+    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)  # Suma total de cuadrados
+    return 1 - (ss_res / ss_tot)

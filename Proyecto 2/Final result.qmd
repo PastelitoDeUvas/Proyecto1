@@ -138,6 +138,22 @@ Si \(X\) contiene características altamente correlacionadas, \(X^\top X\) puede
 
 Para evaluar esto en la práctica, podemos calcular \( \kappa(X^\top X) \) con `numpy`:
 
+```{python}
+#| code-fold: true
+import sys
+
+sys.path.append("C:\\Users\\JUAN\\Desktop\\Algebra-lineal\\Proyecto 1 (K-means)\\repositorio\\Proyecto 2")
+import codes as cd
+import pandas as pd
+
+data = pd.read_csv("data.csv")
+data = data.values 
+
+a=cd.quitar_ultima_columna(data)
+b=cd.result_vector(data)
+cd.condicion(a)
+
+```
 
 
 

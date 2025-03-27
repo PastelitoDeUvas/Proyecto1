@@ -93,12 +93,7 @@ def r2(a, b, beta):
     a = np.atleast_2d(a)  # Asegurar que `a` es bidimensional
     beta = beta.reshape(-1, 1) if beta.ndim == 1 else beta  # Convertir `beta` a (n,1)
     b = b.reshape(-1, 1) if b.ndim == 1 else b  # Asegurar que `b` sea (m,1)
-
-    print(f"a.shape: {a.shape}, beta.shape: {beta.shape}, b.shape: {b.shape}")  # Depuración
-
     aprox = a @ beta  # Multiplicación segura
-
-    print(f"aprox.shape: {aprox.shape}")  # Depuración
 
     ss_res = np.sum((b - aprox) ** 2)  # Suma de los residuos al cuadrado
     ss_tot = np.sum((b - np.mean(b)) ** 2)  # Suma total de cuadrados

@@ -148,7 +148,6 @@ a=cd.quitar_ultima_columna(data)
 b=cd.result_vector(data)
 cd.condicion(a)
 
-print (data)
 
 ```
 
@@ -228,12 +227,20 @@ Si el MSE no disminuye despues de 200 epocas es porque debe estar atascado debid
 
 **b) ¿Qué ventajas tiene la validación cruzada sobre la división de los datos en entrenamiento y test?**
 
--Todos los datos se usan tanto para validar como para entrenar,por lo que mejora el desempeño del modelo
--Reduce el impacto de una mala division de los datos al evaluar el modelo con diferentes subconjuntos
--Es util cuando hay pocos datos en el data set 
+-Aprovechamiento total de los datos: Todos los datos se utilizan tanto para entrenar como para validar, lo que permite obtener una evaluación más representativa del modelo.
+
+-Reducción del sesgo en la evaluación: Minimiza el impacto de una mala división de los datos, ya que el modelo se prueba con diferentes subconjuntos del dataset.
+
+-Mayor utilidad en datasets pequeños: Es especialmente beneficiosa cuando hay pocos datos, ya que evita desperdiciar información al no reservar un único conjunto de test fijo.
+
+Este enfoque garantiza una evaluación más robusta del desempeño del modelo y reduce la variabilidad en los resultados.
 
 ### 5. Evaluación del Modelo
 
 **a) Evalúe el desempeño de los modelos implementados en los puntos 2 y 3, usando el error cuadrático medio (MSE) y el coeficiente de determinación (𝑅2). ¿Qué modelo tienemejor desempeño?**
 
-Dados los resultados en las ecuaciones normales y el gradiente decendiente , se puede ver que las ecuaciones normales ofrencen un modelo con un error cuadratico menor que el gradiente descendiente ,aunque la diferencia entre ambos es menor a 10^-8 , por lo que no es muy significativo realmente en el desempeño del modelo 
+Al comparar los resultados obtenidos con las ecuaciones normales y el descenso de gradiente, se observa que las ecuaciones normales ofrecen un modelo con un error cuadrático medio (MSE) menor, lo que indica un mejor ajuste en términos de minimización del error absoluto.
+
+Además, el MSE mide el error en las mismas unidades que la variable objetivo, permitiendo interpretar directamente la magnitud de las desviaciones del modelo. En contraste, 𝑅^2 es una métrica relativa, lo que significa que solo muestra qué porcentaje de la variabilidad de los datos es explicado por el modelo, sin proporcionar información sobre el error absoluto real.
+
+En este caso, el MSE ha resultado ser una mejor métrica para evaluar el desempeño del modelo, ya que refleja con mayor precisión la calidad del ajuste en términos de los errores absolutos cometidos por la regresión.

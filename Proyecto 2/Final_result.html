@@ -336,19 +336,6 @@ X^\top X \beta = X^\top y
 │ Número de Condición   │   1.00867 │
 ╘═══════════════════════╧═══════════╛</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[[ 0.49938539 -0.14262092  0.65106094  1.52603418 -0.23886967 -0.23793875]
- [-0.23010608  1.57605134  0.77065925 -0.46197206  0.53969558 -0.57153711]
- [-0.45896027 -0.47031425  0.24583574 -1.90251858 -1.7331884   0.58460168]
- ...
- [-0.09404547  0.21864417 -1.38712134  0.25165755 -0.60315027 -0.66723903]
- [-0.21974066  0.84397402 -1.38510749 -0.63802186  0.30540902 -0.56254631]
- [ 1.33473452 -0.11409328 -0.23922129 -0.78921694 -1.64920422  0.5968963 ]]</code></pre>
-</div>
 </div>
 <p>Dado que el numero de condicion es cercano a 1 ,podemos afirmar que la matriz esta bien condicionada , al tener sus valores singulares maximos y minmos muy cerca entre si , por lo que pequeñas perturbaciones no afectan la matriz</p>
 <p><strong>c) ¿Qué ventajas tiene la ecuación normal sobre el gradiente descendente?</strong></p>
@@ -377,7 +364,7 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>err,beta,grado<span class="op">=</span>cd.pseudo_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>err,beta,grado<span class="op">=</span>cd.pseudo_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -388,7 +375,7 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>error_r2<span class="op">=</span>cd.r2(a,b,beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>error_r2<span class="op">=</span>cd.r2(a,b,beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>a.shape: (100000, 11), beta.shape: (11, 1), b.shape: (100000, 1)
@@ -396,7 +383,7 @@ aprox.shape: (100000, 1)</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error cuadratico: "</span>, err, <span class="st">"beta"</span>,  beta ,<span class="st">" grado "</span> , grado,<span class="st">"R2"</span>,error_r2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error cuadratico: "</span>, err, <span class="st">"beta"</span>,  beta ,<span class="st">" grado "</span> , grado,<span class="st">"R2"</span>,error_r2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>error cuadratico:  0.2449552912150161 beta [[-1.42209103e-01]
@@ -420,14 +407,14 @@ aprox.shape: (100000, 1)</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> cd.standardize(data)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> b.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>err,beta,grado,iteration<span class="op">=</span>cd.gradiente_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> cd.standardize(data)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> b.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>err,beta,grado,iteration<span class="op">=</span>cd.gradiente_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -438,7 +425,7 @@ aprox.shape: (100000, 1)</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>error_r2<span class="op">=</span>cd.r2(a,b,beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>error_r2<span class="op">=</span>cd.r2(a,b,beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>a.shape: (100000, 11), beta.shape: (11, 1), b.shape: (100000, 1)
@@ -446,10 +433,10 @@ aprox.shape: (100000, 1)</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error"</span>,err,<span class="st">"beta"</span>,beta,<span class="st">"grado"</span>,grado,<span class="st">"iteracion"</span>,iteration,<span class="st">"R2"</span>,error_r2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error"</span>,err,<span class="st">"beta"</span>,beta,<span class="st">"grado"</span>,grado,<span class="st">"iteracion"</span>,iteration,<span class="st">"R2"</span>,error_r2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>error 0.013997445179815486 beta [[-1.42209068e-01]
+<pre><code>error 0.24495529064677102 beta [[-1.42209068e-01]
  [ 2.82291253e-01]
  [-2.15212695e-01]
  [ 5.41385415e-01]
@@ -474,12 +461,17 @@ aprox.shape: (100000, 1)</code></pre>
 <section id="cross-validation" class="level3">
 <h3 class="anchored" data-anchor-id="cross-validation">4. Cross Validation</h3>
 <p><strong>b) ¿Qué ventajas tiene la validación cruzada sobre la división de los datos en entrenamiento y test?</strong></p>
-<p>-Todos los datos se usan tanto para validar como para entrenar,por lo que mejora el desempeño del modelo -Reduce el impacto de una mala division de los datos al evaluar el modelo con diferentes subconjuntos -Es util cuando hay pocos datos en el data set</p>
+<p>-Aprovechamiento total de los datos: Todos los datos se utilizan tanto para entrenar como para validar, lo que permite obtener una evaluación más representativa del modelo.</p>
+<p>-Reducción del sesgo en la evaluación: Minimiza el impacto de una mala división de los datos, ya que el modelo se prueba con diferentes subconjuntos del dataset.</p>
+<p>-Mayor utilidad en datasets pequeños: Es especialmente beneficiosa cuando hay pocos datos, ya que evita desperdiciar información al no reservar un único conjunto de test fijo.</p>
+<p>Este enfoque garantiza una evaluación más robusta del desempeño del modelo y reduce la variabilidad en los resultados.</p>
 </section>
 <section id="evaluación-del-modelo" class="level3">
 <h3 class="anchored" data-anchor-id="evaluación-del-modelo">5. Evaluación del Modelo</h3>
 <p><strong>a) Evalúe el desempeño de los modelos implementados en los puntos 2 y 3, usando el error cuadrático medio (MSE) y el coeficiente de determinación (𝑅2). ¿Qué modelo tienemejor desempeño?</strong></p>
-<p>Dados los resultados en las ecuaciones normales y el gradiente decendiente , se puede ver que las ecuaciones normales ofrencen un modelo con un error cuadratico menor que el gradiente descendiente ,aunque la diferencia entre ambos es menor a 10^-8 , por lo que no es muy significativo realmente en el desempeño del modelo</p>
+<p>Al comparar los resultados obtenidos con las ecuaciones normales y el descenso de gradiente, se observa que las ecuaciones normales ofrecen un modelo con un error cuadrático medio (MSE) menor, lo que indica un mejor ajuste en términos de minimización del error absoluto.</p>
+<p>Además, el MSE mide el error en las mismas unidades que la variable objetivo, permitiendo interpretar directamente la magnitud de las desviaciones del modelo. En contraste, 𝑅^2 es una métrica relativa, lo que significa que solo muestra qué porcentaje de la variabilidad de los datos es explicado por el modelo, sin proporcionar información sobre el error absoluto real.</p>
+<p>En este caso, el MSE ha resultado ser una mejor métrica para evaluar el desempeño del modelo, ya que refleja con mayor precisión la calidad del ajuste en términos de los errores absolutos cometidos por la regresión.</p>
 </section>
 </section>
 

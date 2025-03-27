@@ -75,6 +75,13 @@ def pseudoinversa(A, b):
     
     return beta
 
+
+def r2(y_true, y_pred):
+    ss_res = np.sum((y_true - y_pred) ** 2)  # Suma de los residuos al cuadrado
+    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)  # Suma total de cuadrados
+    return 1 - (ss_res / ss_tot)
+
+
 def gradiente_descendente(A, b, lr=0.01, max_iter=1000000):
     m, n = A.shape
     b = b.reshape(-1, 1)  # Asegurar que b sea una matriz columna
@@ -182,11 +189,13 @@ def pseudo_training(a, b):
     plt.grid()
     plt.show()
 
+    a_transf = create_variable_matrix(a_80, grado=2)
     best_error, i, j = encontrar_minimo(all_errores)
     best_beta = all_betas[i][j]  # Indexación corregida
     best_grado =all_grados[i][j]
+    best_r2=r2(b,a_transf @ best_beta)
 
-    return best_error, best_beta,best_grado
+    return best_error, best_beta,best_grado,best_r2
 
 def gradiente_training(a, b):
     all_errores = []  # Lista para los errores
@@ -215,8 +224,9 @@ def gradiente_training(a, b):
             iteraciones_list.append(iteraciones)
 
             a_transf = create_variable_matrix(a_80, grado=i)
-            err = error(a_transf, b_80, beta)
-            errores.append(err)
+            error_cuadratico = error(a_transf, b_80, beta)
+            errores.append(error_cuadratico)
+            
             grados.append(i)
 
         all_errores.append(errores)
@@ -233,12 +243,13 @@ def gradiente_training(a, b):
     plt.grid()
     plt.show()
 
+    a_transf = create_variable_matrix(a_20, grado=2)
     best_error, i, j = encontrar_minimo(all_errores)
     best_beta = all_betas[i][j]  # Indexación corregida
     best_grado =all_grados[i][j]
     iteration =all_iteraciones[i][j]
-
-    return best_error, best_beta,best_grado,iteration
+    best_r2=r2(b,a_transf @ best_beta)
+    return best_error, best_beta,best_grado,iteration,best_r2
 
 def condicion(A):
     # Valores singulares de la matriz
@@ -261,7 +272,3 @@ def condicion(A):
     print(tabulate(tabla, headers=["Concepto", "Valor"], tablefmt="fancy_grid"))
 
 
-def r2(y_true, y_pred):
-    ss_res = np.sum((y_true - y_pred) ** 2)  # Suma de los residuos al cuadrado
-    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)  # Suma total de cuadrados
-    return 1 - (ss_res / ss_tot)

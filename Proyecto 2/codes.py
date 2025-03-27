@@ -231,8 +231,22 @@ def gradiente_training(a, b):
 
     return best_error, best_beta,best_grado,iteration
 
-def condicion (a) :
-    ata=a.T @ a
-    condi= np.linalg.cond(ata)
-    return condi
-
+def condicion(A):
+    # Valores singulares de la matriz
+    valores_singulares = np.linalg.svd(A, compute_uv=False)
+    
+    # Valor máximo y mínimo
+    sigma_max = max(valores_singulares)
+    sigma_min = min(valores_singulares)
+    
+    # Número de condición
+    numero_condicion = sigma_max / sigma_min
+    
+    # Imprimir en tabla bonita
+    tabla = [
+        ["Valor Singular Máximo", sigma_max],
+        ["Valor Singular Mínimo", sigma_min],
+        ["Número de Condición", numero_condicion]
+    ]
+    
+    print(tabulate(tabla, headers=["Concepto", "Valor"], tablefmt="fancy_grid"))

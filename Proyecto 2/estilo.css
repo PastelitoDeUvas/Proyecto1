@@ -1,0 +1,23 @@
+body {
+  background-color: #ffe4f7; /* Rosado pastel */
+  color: #822f6c; /* Morado oscuro */
+  font-family: "Poppins", "Comic Sans MS", cursive;
+}
+
+h1, h2, h3 {
+  color: #d36ba6; /* Rosa cute */
+  text-align: center;
+}
+
+code {
+  background-color: #ffd6e7; /* Fondo rosado para código */
+  color: #822f6c; /* Morado */
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.callout-note {
+  background-color: #fbd3e9; /* Fondo pastel cute */
+  border-left: 4px solid #ff66b2;
+  padding: 10px;
+}

@@ -189,13 +189,13 @@ def pseudo_training(a, b):
     plt.grid()
     plt.show()
 
-    a_transf = create_variable_matrix(a_80, grado=2)
+    
     best_error, i, j = encontrar_minimo(all_errores)
     best_beta = all_betas[i][j]  # Indexación corregida
     best_grado =all_grados[i][j]
-    best_r2=r2(b,a_transf @ best_beta)
+    
 
-    return best_error, best_beta,best_grado,best_r2
+    return best_error, best_beta,best_grado
 
 def gradiente_training(a, b):
     all_errores = []  # Lista para los errores
@@ -243,13 +243,13 @@ def gradiente_training(a, b):
     plt.grid()
     plt.show()
 
-    a_transf = create_variable_matrix(a_20, grado=2)
+    
     best_error, i, j = encontrar_minimo(all_errores)
     best_beta = all_betas[i][j]  # Indexación corregida
     best_grado =all_grados[i][j]
     iteration =all_iteraciones[i][j]
-    best_r2=r2(b,a_transf @ best_beta)
-    return best_error, best_beta,best_grado,iteration,best_r2
+    
+    return best_error, best_beta,best_grado,iteration
 
 def condicion(A):
     # Valores singulares de la matriz

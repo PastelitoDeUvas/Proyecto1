@@ -127,9 +127,9 @@ $$
 donde ( \sigma*{*\max} ) y ( \sigma{\min} ) son los valores singulares máximo y mínimo de ( A ), respectivamente.
 
 -   Si ( \kappa(X\^\top X) ) es **bajo**, la matriz está bien condicionada y el cálculo de ( (X\top X){-1} ) es estable.
--   Si ( \kappa(X\^\top X) ) es **alto**, la matriz está mal condicionada, lo que significa que pequeñas variaciones en los datos pueden causar grandes cambios en ( \beta ), afectando la precisión del modelo. **¿Tiene algún problema este número de condición?** Si (X) contiene características altamente correlacionadas, (X\^\top X) puede volverse **casi singular**, resultando en un número de condición alto. Esto puede causar problemas numéricos al calcular ( (X\top X){-1} ), afectando la estabilidad de la ecuación normal.
+-   Si ( \kappa(X\^\top X) ) es **alto**, la matriz está mal condicionada, lo que significa que pequeñas variaciones en los datos pueden causar grandes cambios en ( \beta ), afectando la precisión del modelo. **¿Tiene algún problema este número de condición?** 
 
-Para evaluar esto en la práctica, podemos calcular ( \kappa(X\^\top X) ) con `numpy`:
+Calculamos el numero de condicion mediante numpy :
 
 ```{python}
 #| code-fold: true
@@ -177,8 +177,8 @@ Implemente un algoritmo que:
 #| code-fold: true
 
 err,beta,grado=cd.pseudo_training(a,b)
-
-print("error cuadratico: ", err, "beta",  beta ," grado " , grado)
+error_r2=cd.r2(a,b,beta)
+print("error cuadratico: ", err, "beta",  beta ," grado " , grado,"R2",error_r2)
 
 
 ```
@@ -203,7 +203,9 @@ b = b.reshape(-1, 1)
 
 
 err,beta,grado,iteration=cd.gradiente_training(a,b)
-print("error",err,"beta",beta,"grado",grado,"iteracion",iteration)
+error_r2=cd.r2(a,b,beta)
+print("error",err,"beta",beta,"grado",grado,"iteracion",iteration,"R2",error_r2)
+
 ```
 **c) si los modelos de gradiente descendente y ecuación normal son diferentes, ¿cuál es el motivo?, y si son iguales, ¿cual tiene mejor desempeño?**
 
@@ -213,7 +215,9 @@ Ambos modelos dan resultados casi identicos con una diferencia en su error de me
 **c) ¿Qué ventajas tiene el gradiente descendente sobre la ecuación normal?**
 
 -Cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional 
+
 -Si se trata de un grupo de datos muy grande con un gran numero de caracteristicas ,el gradiente descendiente lograra converger a un resultado de forma mas rapida que las ecuaciones normales 
+
 -Requiere de un uso menor de memoria al solo almacenar los pesos y los parametros, a diferencia de las ecuaciones normales que necesitan manipular y almacenar todas las matrices por completo
 
 **d) Si el MSE no disminuye después de 200 épocas, ¿qué hiperparámetros ajustarías?**

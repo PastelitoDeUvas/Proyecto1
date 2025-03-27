@@ -304,9 +304,9 @@ X^\top X \beta = X^\top y
 <p>donde ( ) y ( ) son los valores singulares máximo y mínimo de ( A ), respectivamente.</p>
 <ul>
 <li>Si ( (X^X) ) es <strong>bajo</strong>, la matriz está bien condicionada y el cálculo de ( (XX){-1} ) es estable.</li>
-<li>Si ( (X^X) ) es <strong>alto</strong>, la matriz está mal condicionada, lo que significa que pequeñas variaciones en los datos pueden causar grandes cambios en ( ), afectando la precisión del modelo. <strong>¿Tiene algún problema este número de condición?</strong> Si (X) contiene características altamente correlacionadas, (X^X) puede volverse <strong>casi singular</strong>, resultando en un número de condición alto. Esto puede causar problemas numéricos al calcular ( (XX){-1} ), afectando la estabilidad de la ecuación normal.</li>
+<li>Si ( (X^X) ) es <strong>alto</strong>, la matriz está mal condicionada, lo que significa que pequeñas variaciones en los datos pueden causar grandes cambios en ( ), afectando la precisión del modelo. <strong>¿Tiene algún problema este número de condición?</strong></li>
 </ul>
-<p>Para evaluar esto en la práctica, podemos calcular ( (X^X) ) con <code>numpy</code>:</p>
+<p>Calculamos el numero de condicion mediante numpy :</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -388,10 +388,18 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error cuadratico: "</span>, err, <span class="st">"beta"</span>,  beta ,<span class="st">" grado "</span> , grado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>error_r2<span class="op">=</span>cd.r2(a,b,beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>error cuadratico:  33.46334736667763 beta [[-1.42209103e-01]
+<pre><code>a.shape: (100000, 11), beta.shape: (11, 1), b.shape: (100000, 1)
+aprox.shape: (100000, 1)</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error cuadratico: "</span>, err, <span class="st">"beta"</span>,  beta ,<span class="st">" grado "</span> , grado,<span class="st">"R2"</span>,error_r2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>error cuadratico:  0.2449552912150161 beta [[-1.42209103e-01]
  [ 2.82291253e-01]
  [-2.15212695e-01]
  [ 5.41385415e-01]
@@ -401,7 +409,7 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
  [-3.05814392e-01]
  [ 2.59975809e-01]
  [-2.39172615e-03]
- [-2.73093190e-04]]  grado  2</code></pre>
+ [-2.73093190e-04]]  grado  2 R2 0.9860136329409931</code></pre>
 </div>
 </div>
 </section>
@@ -412,14 +420,14 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> cd.standardize(data)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> b.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>err,beta,grado,iteration<span class="op">=</span>cd.gradiente_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> cd.standardize(data)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span>cd.quitar_ultima_columna(data)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span>cd.result_vector(data)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> b.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>err,beta,grado,iteration<span class="op">=</span>cd.gradiente_training(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -430,10 +438,18 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error"</span>,err,<span class="st">"beta"</span>,beta,<span class="st">"grado"</span>,grado,<span class="st">"iteracion"</span>,iteration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>error_r2<span class="op">=</span>cd.r2(a,b,beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>error 33.46334732786364 beta [[-1.42209068e-01]
+<pre><code>a.shape: (100000, 11), beta.shape: (11, 1), b.shape: (100000, 1)
+aprox.shape: (100000, 1)</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error"</span>,err,<span class="st">"beta"</span>,beta,<span class="st">"grado"</span>,grado,<span class="st">"iteracion"</span>,iteration,<span class="st">"R2"</span>,error_r2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>error 0.013997445179815486 beta [[-1.42209068e-01]
  [ 2.82291253e-01]
  [-2.15212695e-01]
  [ 5.41385415e-01]
@@ -443,13 +459,15 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
  [-3.05814397e-01]
  [ 2.59975804e-01]
  [-2.39173119e-03]
- [-2.73098433e-04]] grado 2 iteracion 2931</code></pre>
+ [-2.73098433e-04]] grado 2 iteracion 2931 R2 0.98601363296697</code></pre>
 </div>
 </div>
 <p><strong>c) si los modelos de gradiente descendente y ecuación normal son diferentes, ¿cuál es el motivo?, y si son iguales, ¿cual tiene mejor desempeño?</strong></p>
 <p>Ambos modelos dan resultados casi identicos con una diferencia en su error de menos de 10^-8 , pero dada la complejidad computacional de cada uno , lo mejor es tomar el de ecuaaciones normales ,que converge de forma mas rapida y con menos trabajo</p>
 <p><strong>c) ¿Qué ventajas tiene el gradiente descendente sobre la ecuación normal?</strong></p>
-<p>-Cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional -Si se trata de un grupo de datos muy grande con un gran numero de caracteristicas ,el gradiente descendiente lograra converger a un resultado de forma mas rapida que las ecuaciones normales -Requiere de un uso menor de memoria al solo almacenar los pesos y los parametros, a diferencia de las ecuaciones normales que necesitan manipular y almacenar todas las matrices por completo</p>
+<p>-Cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional</p>
+<p>-Si se trata de un grupo de datos muy grande con un gran numero de caracteristicas ,el gradiente descendiente lograra converger a un resultado de forma mas rapida que las ecuaciones normales</p>
+<p>-Requiere de un uso menor de memoria al solo almacenar los pesos y los parametros, a diferencia de las ecuaciones normales que necesitan manipular y almacenar todas las matrices por completo</p>
 <p><strong>d) Si el MSE no disminuye después de 200 épocas, ¿qué hiperparámetros ajustarías?</strong></p>
 <p>Si el MSE no disminuye despues de 200 epocas es porque debe estar atascado debido a que la tasa de aprendizaje es muy baja , lo que genera que los cambios en los pesos sean muy pequeños o casi insignificantes , resultando en periodos muy largos para converger , o incluso se puede dar el caso de que no logre converger</p>
 </section>

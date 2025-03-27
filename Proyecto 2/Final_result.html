@@ -388,10 +388,10 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error: "</span>, err, <span class="st">" beta "</span> , beta , <span class="st">" grado "</span> , grado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error cuadratico: "</span>, err, <span class="st">"beta"</span>,  beta ,<span class="st">" grado "</span> , grado)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>error:  33.46334736667763  beta  [[-1.42209103e-01]
+<pre><code>error cuadratico:  33.46334736667763 beta [[-1.42209103e-01]
  [ 2.82291253e-01]
  [-2.15212695e-01]
  [ 5.41385415e-01]
@@ -404,7 +404,9 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
  [-2.73093190e-04]]  grado  2</code></pre>
 </div>
 </div>
-<p>###3. Gradiente Descendente</p>
+</section>
+<section id="gradiente-descendente" class="level3">
+<h3 class="anchored" data-anchor-id="gradiente-descendente">3. Gradiente Descendente</h3>
 <p><strong>a) Explica por qué se normalizan las características antes de aplicar gradiente descendente</strong> Es importante normalizar las caracteristicas antes de aplicar el modeelo debido a las siguientes razones: -Evita que alguna de las caracteristicas domine el entrenamiento del modelo,debido a que si una de las caracteristicas esta en millones y otra entre 1y 0 , la que esta en millones tendra mucho mas peso que la otra , por lo que su convergencia seria mas lenta y su error mayor -acelera la convergencia ya que con cada iteracion ajusta el peso de cada caracteristica, por lo que si sus escalas son muy diferentes , esto puede resultar en un error mayor y una convergencia mas lenta -Los calculos del gradiente pueden verse afectados por valores extremos</p>
 <p><strong>b) Implementa un algoritmo de gradiente descendente para regresión lineal, unicamente usando “numpy”, incluyendo términos cuadráticos, cúbicos, etc. para mejorar el ajuste del modelo. para mejorar el ajuste del modelo. Escoja el modelo que mejor se ajuste a los datos test.</strong></p>
 <div class="cell">
@@ -445,7 +447,18 @@ En este caso, es mucho más eficiente aplicar la ecuación normal que el gradien
 </div>
 </div>
 <p><strong>c) si los modelos de gradiente descendente y ecuación normal son diferentes, ¿cuál es el motivo?, y si son iguales, ¿cual tiene mejor desempeño?</strong></p>
-<p>ambos modelos dan resul</p>
+<p>Ambos modelos dan resultados casi identicos con una diferencia en su error de menos de 10^-8 , pero dada la complejidad computacional de cada uno , lo mejor es tomar el de ecuaaciones normales ,que converge de forma mas rapida y con menos trabajo</p>
+<p><strong>c) ¿Qué ventajas tiene el gradiente descendente sobre la ecuación normal?</strong></p>
+<p>-Cuando se trata de grandes numeros de datos con muchas caracteristicas , el gradiente descendiente tiene una complejidad mucho menor a las ecuaciones normales , por lo que requiere de menoos trabajo computacional -Si se trata de un grupo de datos muy grande con un gran numero de caracteristicas ,el gradiente descendiente lograra converger a un resultado de forma mas rapida que las ecuaciones normales -Requiere de un uso menor de memoria al solo almacenar los pesos y los parametros, a diferencia de las ecuaciones normales que necesitan manipular y almacenar todas las matrices por completo</p>
+<p><strong>d) Si el MSE no disminuye después de 200 épocas, ¿qué hiperparámetros ajustarías?</strong></p>
+<p>Si el MSE no disminuye despues de 200 epocas es porque debe estar atascado debido a que la tasa de aprendizaje es muy baja , lo que genera que los cambios en los pesos sean muy pequeños o casi insignificantes , resultando en periodos muy largos para converger , o incluso se puede dar el caso de que no logre converger</p>
+</section>
+<section id="cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation">4. Cross Validation</h3>
+<p><strong>b) ¿Qué ventajas tiene la validación cruzada sobre la división de los datos en entrenamiento y test?</strong></p>
+<p>-Todos los datos se usan tanto para validar como para entrenar,por lo que mejora el desempeño del modelo -Reduce el impacto de una mala division de los datos al evaluar el modelo con diferentes subconjuntos -Es util cuando hay pocos datos en el data set ### 5. Evaluación del Modelo</p>
+<p><strong>a) Evalúe el desempeño de los modelos implementados en los puntos 2 y 3, usando el error cuadrático medio (MSE) y el coeficiente de determinación (𝑅2). ¿Qué modelo tienemejor desempeño?</strong></p>
+<p>Dados los resultados en las ecuaciones normales y el gradiente decendiente , se puede ver que las ecuaciones normales ofrencen un modelo con un error cuadratico menor que el gradiente descendiente ,aunque la diferencia entre ambos es menor a 10^-8 , por lo que no es muy significativo realmente en el desempeño del modelo</p>
 </section>
 </section>
 

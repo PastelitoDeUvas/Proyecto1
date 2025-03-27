@@ -177,7 +177,8 @@ Implemente un algoritmo que:
 #| code-fold: true
 
 err,beta,grado=cd.pseudo_training(a,b)
-print("error: ", err, " beta " , beta , " grado " , grado)
+
+print("error cuadratico: ", err, "beta",  beta ," grado " , grado)
 
 
 ```
@@ -222,3 +223,12 @@ Si el MSE no disminuye despues de 200 epocas es porque debe estar atascado debid
 ### 4. Cross Validation
 
 **b) ¿Qué ventajas tiene la validación cruzada sobre la división de los datos en entrenamiento y test?**
+
+-Todos los datos se usan tanto para validar como para entrenar,por lo que mejora el desempeño del modelo
+-Reduce el impacto de una mala division de los datos al evaluar el modelo con diferentes subconjuntos
+-Es util cuando hay pocos datos en el data set 
+### 5. Evaluación del Modelo
+
+**a) Evalúe el desempeño de los modelos implementados en los puntos 2 y 3, usando el error cuadrático medio (MSE) y el coeficiente de determinación (𝑅2). ¿Qué modelo tienemejor desempeño?**
+
+Dados los resultados en las ecuaciones normales y el gradiente decendiente , se puede ver que las ecuaciones normales ofrencen un modelo con un error cuadratico menor que el gradiente descendiente ,aunque la diferencia entre ambos es menor a 10^-8 , por lo que no es muy significativo realmente en el desempeño del modelo 

@@ -298,3 +298,11 @@ def condicion(A):
     data = pd.read_csv("data.csv")
 
 
+def normalize(X):
+    normalized_rows = []
+    for row in X:
+        norm = np.linalg.norm(row)
+        if norm == 0:
+            norm = 1  # Evitar división por cero
+        normalized_rows.append(row / norm)
+    return np.vstack(normalized_rows)

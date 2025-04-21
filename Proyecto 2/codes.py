@@ -177,14 +177,14 @@ def pseudo_training(a, b):
 
     plt.figure(figsize=(8, 5))  # Crear una sola figura
 
-    for k in range(1, 4):
+    for k in range(1, 10):
         errores = []  # Lista para los errores
         grados = []  # Lista de grados
         betas_list = []  # Lista para los betas
 
         a_20, b_20, a_80, b_80 = split_matrices(a.T, b, seed=k**7)
 
-        for i in range(1, 4):  
+        for i in range(1, 10):  
             a_transf = create_variable_matrix(a_20, grado=i)
             beta = pseudoinversa(a_transf, b_20)
 
@@ -227,7 +227,7 @@ def gradiente_training(a, b):
 
     plt.figure(figsize=(8, 5))  # Crear una sola figura
 
-    for k in range(1, 4):
+    for k in range(1, 10):
         errores = []  # Lista para los errores
         grados = []  # Lista de grados
         betas_list = []  # Lista para los betas
@@ -235,7 +235,7 @@ def gradiente_training(a, b):
 
         a_20, b_20, a_80, b_80 = split_matrices(a.T, b.T, seed=k**7)
 
-        for i in range(1, 4):  
+        for i in range(1, 10):  
             a_transf = create_variable_matrix(a_20, grado=i)
             beta,iteraciones = gradiente_descendente(a_transf, b_20, lr=0.01, max_iter=1000000)
 

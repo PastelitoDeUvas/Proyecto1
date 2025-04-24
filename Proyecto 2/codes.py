@@ -306,7 +306,7 @@ def cleaning_data(data):
     X = data.drop(columns=[ "target"])
 
     X = X.apply(pd.to_numeric, errors="coerce")
-    print(X.head(10))
+    
 
 
     # Eliminar filas con valores faltantes (opcional, según si querés trabajar con NaNs o no)
@@ -390,3 +390,94 @@ def f1_score(y_true, y_pred):
 
     f1 = 2 * (precision * recall) / (precision + recall)
     return f1
+
+def train_test_split(X, y, test_size=0.2, seed=42):
+    np.random.seed(seed)
+    indices = np.random.permutation(len(X))
+    test_count = int(len(X) * test_size)
+
+    test_idx = indices[:test_count]
+    train_idx = indices[test_count:]
+
+    return X.iloc[train_idx], X.iloc[test_idx], y[train_idx], y[test_idx]
+
+def find_best_threshold(y_true, probs):
+    best_f1 = 0
+    best_thresh = 0.5
+    for t in np.arange(0.01, 0.9, 0.01):
+        y_pred = (probs >= t).astype(int)
+        f1 = f1_score(y_true, y_pred)
+        if f1 > best_f1:
+            best_f1 = f1
+            best_thresh = t
+    return best_thresh, best_f1
+
+
+def logistic_regression_with_regularization(X, y, lr=0.01, epochs=1000, lambda_reg=0.1):
+    m, n = X.shape
+    W = np.zeros((n, 1))
+    b = 0
+
+    for epoch in range(epochs):
+        # Predicciones
+        Z = np.dot(X, W) + b
+        A = sigmoid(Z)
+
+        # Cálculo de pérdida (con regularización L2)
+        loss = -np.mean(y * np.log(A + 1e-8) + (1 - y) * np.log(1 - A + 1e-8)) + lambda_reg * np.sum(W**2)
+
+        # Gradientes
+        dW = np.dot(X.T, (A - y)) / m + 2 * lambda_reg * W  # Regularización en los gradientes
+        db = np.mean(A - y)
+
+        # Actualización de pesos
+        W -= lr * dW
+        b -= lr * db
+
+        # Imprimir la pérdida cada 100 iteraciones
+        if epoch % 100 == 0:
+            print(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+    return W, b
+
+
+def new_cleaning_data(data):
+    # Convertir la columna 'genero' a binario: suponiendo que 'Femenino' y 'Masculino' son los valores
+    data["genero"] = data["genero"].map({"F": 0, "M": 1})
+
+    # Eliminar columnas no útiles (como ID y target)
+    X = data.drop(columns=[ "target","ratio_colesterol","actividad_fisica","horas_sueno","historial_diabetes","dias_ultima_consulta","edad","genero"])
+
+
+    X = X.apply(pd.to_numeric, errors="coerce")
+    
+
+
+    # Eliminar filas con valores faltantes (opcional, según si querés trabajar con NaNs o no)
+    X = X.dropna(axis=1, thresh=int(len(X) * 0.9))  # Conserva columnas con al menos 90% de datos válidos
+
+
+    # Extraer la variable objetivo alineada con X
+    y = data.loc[X.index, "target"].values.reshape(-1, 1)
+
+
+
+
+
+    # Columnas que sí se normalizan
+    X_to_norm = X
+
+    means = X_to_norm.mean()
+    stds = X_to_norm.std()
+    stds[stds == 0] = 1  # Evitar división por cero
+
+    X_normalized = (X_to_norm - means) / stds
+
+    # Combinar todo de nuevo (ordenando columnas si querés)
+    X_final = X_normalized
+
+    # Opcional: asegurarse que las columnas queden en el mismo orden original
+    X = X_final[X.columns]  # conserva el orden original
+
+
+    return X,y

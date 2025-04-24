@@ -9,8 +9,9 @@ x,y=codes.cleaning_data(train)
 W, b = codes.logistic_regression(x, y, lr=0.1, epochs=1000)
 
 y_pred = codes.predict(x, W, b)
-accuracy = np.mean(y_pred == y)
-print(f"Accuracy: {accuracy:.4f}")
+score = codes.f1_score(y, y_pred)
+
+print(f"F1 Score: {score:.4f}")
 
 
 

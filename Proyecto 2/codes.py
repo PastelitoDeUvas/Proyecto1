@@ -373,3 +373,20 @@ def logistic_regression(X, y, lr=0.01, epochs=1000):
 def predict(X, W, b, threshold=0.5):
     probs = sigmoid(np.dot(X, W) + b)
     return (probs >= threshold).astype(int)
+
+def f1_score(y_true, y_pred):
+    tp = np.sum((y_true == 1) & (y_pred == 1))
+    fp = np.sum((y_true == 0) & (y_pred == 1))
+    fn = np.sum((y_true == 1) & (y_pred == 0))
+
+    if tp + fp == 0 or tp + fn == 0:
+        return 0.0  # Para evitar división por cero
+
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+
+    if precision + recall == 0:
+        return 0.0
+
+    f1 = 2 * (precision * recall) / (precision + recall)
+    return f1

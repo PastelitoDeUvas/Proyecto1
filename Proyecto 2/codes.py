@@ -298,11 +298,78 @@ def condicion(A):
     data = pd.read_csv("data.csv")
 
 
-def normalize(X):
-    normalized_rows = []
-    for row in X:
-        norm = np.linalg.norm(row)
-        if norm == 0:
-            norm = 1  # Evitar división por cero
-        normalized_rows.append(row / norm)
-    return np.vstack(normalized_rows)
+def cleaning_data(data):
+    # Convertir la columna 'genero' a binario: suponiendo que 'Femenino' y 'Masculino' son los valores
+    data["genero"] = data["genero"].map({"F": 0, "M": 1})
+
+    # Eliminar columnas no útiles (como ID y target)
+    X = data.drop(columns=[ "target"])
+
+    X = X.apply(pd.to_numeric, errors="coerce")
+    print(X.head(10))
+
+
+    # Eliminar filas con valores faltantes (opcional, según si querés trabajar con NaNs o no)
+    X = X.dropna(axis=1, thresh=int(len(X) * 0.9))  # Conserva columnas con al menos 90% de datos válidos
+
+
+    # Extraer la variable objetivo alineada con X
+    y = data.loc[X.index, "target"].values.reshape(-1, 1)
+
+
+    # Copiar columnas que no se van a normalizar
+    X_no_norm = X[["genero", "historial_diabetes"]]
+
+
+    # Columnas que sí se normalizan
+    X_to_norm = X.drop(columns=[ "genero","historial_diabetes"])
+
+    means = X_to_norm.mean()
+    stds = X_to_norm.std()
+    stds[stds == 0] = 1  # Evitar división por cero
+
+    X_normalized = (X_to_norm - means) / stds
+
+    # Combinar todo de nuevo (ordenando columnas si querés)
+    X_final = pd.concat([X_normalized, X_no_norm], axis=1)
+
+    # Opcional: asegurarse que las columnas queden en el mismo orden original
+    X = X_final[X.columns]  # conserva el orden original
+
+
+    return X,y
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+def logistic_regression(X, y, lr=0.01, epochs=1000):
+    m, n = X.shape
+    W = np.zeros((n, 1))
+    b = 0
+
+    for epoch in range(epochs):
+        # Predicciones
+        Z = np.dot(X, W) + b
+        A = sigmoid(Z)
+
+        # Cálculo de pérdida (binary cross-entropy)
+        loss = -np.mean(y * np.log(A + 1e-8) + (1 - y) * np.log(1 - A + 1e-8))
+
+        # Gradientes
+        dW = np.dot(X.T, (A - y)) / m
+        db = np.mean(A - y)
+
+        # Actualización de pesos
+        W -= lr * dW
+        b -= lr * db
+
+        # Imprimir la pérdida cada 100 iteraciones
+        if epoch % 100 == 0:
+            print(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+    return W, b
+
+
+def predict(X, W, b, threshold=0.5):
+    probs = sigmoid(np.dot(X, W) + b)
+    return (probs >= threshold).astype(int)

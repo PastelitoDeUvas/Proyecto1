@@ -441,43 +441,6 @@ def logistic_regression_with_regularization(X, y, lr=0.01, epochs=1000, lambda_r
     return W, b
 
 
-def new_cleaning_data(data):
-    # Convertir la columna 'genero' a binario: suponiendo que 'Femenino' y 'Masculino' son los valores
-    data["genero"] = data["genero"].map({"F": 0, "M": 1})
-
-    # Eliminar columnas no útiles (como ID y target)
-    X = data.drop(columns=[ "target","ratio_colesterol","actividad_fisica","horas_sueno","historial_diabetes","dias_ultima_consulta","edad","genero"])
-
-
-    X = X.apply(pd.to_numeric, errors="coerce")
-    
-
-
-    # Eliminar filas con valores faltantes (opcional, según si querés trabajar con NaNs o no)
-    X = X.dropna(axis=1, thresh=int(len(X) * 0.9))  # Conserva columnas con al menos 90% de datos válidos
-
-
-    # Extraer la variable objetivo alineada con X
-    y = data.loc[X.index, "target"].values.reshape(-1, 1)
 
 
 
-
-
-    # Columnas que sí se normalizan
-    X_to_norm = X
-
-    means = X_to_norm.mean()
-    stds = X_to_norm.std()
-    stds[stds == 0] = 1  # Evitar división por cero
-
-    X_normalized = (X_to_norm - means) / stds
-
-    # Combinar todo de nuevo (ordenando columnas si querés)
-    X_final = X_normalized
-
-    # Opcional: asegurarse que las columnas queden en el mismo orden original
-    X = X_final[X.columns]  # conserva el orden original
-
-
-    return X,y
